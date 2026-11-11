@@ -1,0 +1,7 @@
+security:
+  pin_length: 4
+  max_failed_attempts: 3
+  lockout_minutes: 5
+  token_expiration_minutes: 60
+  inactivity_timeout_sec: 180
+  login_rate_limit_per_min: 15

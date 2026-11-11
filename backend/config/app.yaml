@@ -1,0 +1,19 @@
+app:
+  name: "buffalo-wings-pos-api"
+  env: "local"
+  port: 8080
+  log_level: "info"
+  audit_detail_level: "standard"
+  default_page_size: 20
+  max_page_size: 100
+  read_timeout_sec: 10
+  write_timeout_sec: 10
+database:
+  host: "127.0.0.1"
+  port: 3306
+  name: "buffalo_pos"
+  max_open_conns: 25
+  max_idle_conns: 10
+cors:
+  allowed_origins:
+    - "http://localhost:5173"

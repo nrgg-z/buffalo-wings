@@ -1,0 +1,10 @@
+business:
+  tax_rate: 0.13
+  suggested_tip_rate: 0.10
+  kds_warning_minutes: 10
+  kds_critical_minutes: 18
+  dte_simulated_prefix: "DTE-01-S001P001"
+  enabled_payment_methods:
+    - "CASH"
+    - "CARD"
+    - "QR"
