@@ -1,0 +1,19 @@
+# Binarios y compilados
+backend/bin/
+backend/dist/
+frontend/node_modules/
+frontend/dist/
+
+# Entorno y credenciales locales
+.env
+*.local
+*.log
+
+# Datos de base de datos Docker
+mysql_data/
+
+# Editores
+.vscode/
+.idea/
+.DS_Store
+*.swp

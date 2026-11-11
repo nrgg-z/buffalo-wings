@@ -1,0 +1,21 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: buffalo_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_local
+      MYSQL_DATABASE: buffalo_pos
+      MYSQL_USER: buffalo_user
+      MYSQL_PASSWORD: buffalo_secret_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "buffalo_user", "-pbuffalo_secret_pass"]
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_data:
