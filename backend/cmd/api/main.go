@@ -9,8 +9,10 @@ import (
 	"os"
 	"time"
 
+	"buffalo-pos/internal/auth/adapter/httpapi"
+	"buffalo-pos/internal/auth/adapter/mysqlrepo"
+	"buffalo-pos/internal/auth/service"
 	"buffalo-pos/internal/platform/config"
-
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -78,6 +80,24 @@ func main() {
 			"enabled_payment_methods": cfg.Business.EnabledPaymentMethods,
 		})
 	})
+	// 4. Autenticación (HU-02)
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		log.Fatal("Falta la variable de entorno JWT_SECRET")
+	}
+
+	userRepo := mysqlrepo.NewUserRepository(db)
+	authService, err := service.NewAuthService(userRepo, service.Config{
+		PINLength:         cfg.Security.PINLength,
+		MaxFailedAttempts: cfg.Security.MaxFailedAttempts,
+		LockoutDuration:   time.Duration(cfg.Security.LockoutMinutes) * time.Minute,
+		TokenTTL:          time.Duration(cfg.Security.TokenExpirationMin) * time.Minute,
+		JWTSecret:         []byte(jwtSecret),
+	})
+	if err != nil {
+		log.Fatalf("Error creando servicio de autenticacion: %v", err)
+	}
+	httpapi.NewAuthHandler(authService).Register(mux)
 
 	addr := fmt.Sprintf(":%d", cfg.App.Port)
 	log.Printf("Servidor escuchando en http://localhost%s", addr)
