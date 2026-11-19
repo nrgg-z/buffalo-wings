@@ -22,21 +22,49 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 // Verificación en compilación: si falta un método del contrato, no compila.
 var _ port.UserRepository = (*UserRepository)(nil)
 
-const findByEmployeeCodeQuery = `
+// selectUserQuery es la parte común de las búsquedas de usuario (con su rol).
+const selectUserQuery = `
 	SELECT u.id, u.employee_code, u.full_name, u.pin_hash,
 	       r.code, u.is_active, u.failed_attempts, u.locked_until
 	FROM users u
-	JOIN roles r ON r.id = u.role_id
-	WHERE u.employee_code = ?`
+	JOIN roles r ON r.id = u.role_id`
+
+const (
+	findByEmployeeCodeQuery = selectUserQuery + ` WHERE u.employee_code = ?`
+	findByIDQuery           = selectUserQuery + ` WHERE u.id = ?`
+)
 
 func (r *UserRepository) FindByEmployeeCode(ctx context.Context, code string) (*domain.User, error) {
+	u, err := scanUser(r.db.QueryRowContext(ctx, findByEmployeeCodeQuery, code))
+	if err != nil {
+		if errors.Is(err, port.ErrUserNotFound) {
+			return nil, err
+		}
+		return nil, fmt.Errorf("buscar usuario por código: %w", err)
+	}
+	return u, nil
+}
+
+func (r *UserRepository) FindByID(ctx context.Context, id int64) (*domain.User, error) {
+	u, err := scanUser(r.db.QueryRowContext(ctx, findByIDQuery, id))
+	if err != nil {
+		if errors.Is(err, port.ErrUserNotFound) {
+			return nil, err
+		}
+		return nil, fmt.Errorf("buscar usuario por id: %w", err)
+	}
+	return u, nil
+}
+
+// scanUser convierte una fila de selectUserQuery en un domain.User.
+func scanUser(row *sql.Row) (*domain.User, error) {
 	var (
 		u           domain.User
 		role        string
 		lockedUntil sql.NullTime
 	)
 
-	err := r.db.QueryRowContext(ctx, findByEmployeeCodeQuery, code).Scan(
+	err := row.Scan(
 		&u.ID,
 		&u.EmployeeCode,
 		&u.FullName,
@@ -50,7 +78,7 @@ func (r *UserRepository) FindByEmployeeCode(ctx context.Context, code string) (*
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, port.ErrUserNotFound
 		}
-		return nil, fmt.Errorf("buscar usuario por código: %w", err)
+		return nil, err
 	}
 
 	u.Role = domain.Role(role)
@@ -72,4 +100,3 @@ func (r *UserRepository) UpdateLoginState(ctx context.Context, u *domain.User) e
 	}
 	return nil
 }
-

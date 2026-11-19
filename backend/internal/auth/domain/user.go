@@ -17,11 +17,21 @@ const (
 	RoleCashier Role = "CASHIER"
 )
 
+// IsValid indica si el rol es uno de los que existen en la tabla roles.
+func (r Role) IsValid() bool {
+	switch r {
+	case RoleAdmin, RoleManager, RoleHostess, RoleWaiter, RoleKitchen, RoleCashier:
+		return true
+	}
+	return false
+}
+
 // Errores de negocio de la autenticación.
 var (
 	ErrInvalidCredentials = errors.New("credenciales inválidas")
 	ErrUserLocked         = errors.New("usuario bloqueado temporalmente")
 	ErrUserInactive       = errors.New("usuario inactivo")
+	ErrInvalidToken       = errors.New("token inválido o expirado")
 )
 
 // User es el empleado que inicia sesión.

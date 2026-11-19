@@ -2,17 +2,19 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
-	"buffalo-pos/internal/auth/adapter/httpapi"
-	"buffalo-pos/internal/auth/adapter/mysqlrepo"
-	"buffalo-pos/internal/auth/service"
+	auditrepo "buffalo-pos/internal/audit/adapter/mysqlrepo"
+	authhttp "buffalo-pos/internal/auth/adapter/httpapi"
+	authrepo "buffalo-pos/internal/auth/adapter/mysqlrepo"
+	authservice "buffalo-pos/internal/auth/service"
 	"buffalo-pos/internal/platform/config"
+	"buffalo-pos/internal/platform/httpx"
+	"buffalo-pos/internal/platform/ratelimit"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -51,15 +53,13 @@ func main() {
 
 	// GET /api/v1/healthz
 	mux.HandleFunc("GET /api/v1/healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
+		status := http.StatusOK
 		dbStatus := "up"
-		if err := db.Ping(); err != nil {
+		if err := db.PingContext(r.Context()); err != nil {
 			dbStatus = "down"
-			w.WriteHeader(http.StatusServiceUnavailable)
-		} else {
-			w.WriteHeader(http.StatusOK)
+			status = http.StatusServiceUnavailable
 		}
-		json.NewEncoder(w).Encode(map[string]any{
+		httpx.WriteJSON(w, status, map[string]any{
 			"status":        "ok",
 			"service":       cfg.App.Name,
 			"db_status":     dbStatus,
@@ -69,8 +69,7 @@ func main() {
 
 	// GET /api/v1/config/public
 	mux.HandleFunc("GET /api/v1/config/public", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]any{
+		httpx.WriteJSON(w, http.StatusOK, map[string]any{
 			"pin_length":              cfg.Security.PINLength,
 			"inactivity_timeout_sec":  cfg.Security.InactivityTimeoutSec,
 			"tax_rate":                cfg.Business.TaxRate,
@@ -80,14 +79,16 @@ func main() {
 			"enabled_payment_methods": cfg.Business.EnabledPaymentMethods,
 		})
 	})
-	// 4. Autenticación (HU-02)
+
+	// 4. Autenticación y bitácora (HU-02)
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if jwtSecret == "" {
 		log.Fatal("Falta la variable de entorno JWT_SECRET")
 	}
 
-	userRepo := mysqlrepo.NewUserRepository(db)
-	authService, err := service.NewAuthService(userRepo, service.Config{
+	userRepo := authrepo.NewUserRepository(db)
+	auditRepo := auditrepo.NewAuditRepository(db)
+	authService, err := authservice.NewAuthService(userRepo, auditRepo, authservice.Config{
 		PINLength:         cfg.Security.PINLength,
 		MaxFailedAttempts: cfg.Security.MaxFailedAttempts,
 		LockoutDuration:   time.Duration(cfg.Security.LockoutMinutes) * time.Minute,
@@ -97,11 +98,17 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error creando servicio de autenticacion: %v", err)
 	}
-	httpapi.NewAuthHandler(authService).Register(mux)
+
+	// Límite de intentos de login por IP (login_rate_limit_per_min de security.yaml).
+	loginLimiter := ratelimit.New(cfg.Security.LoginRateLimitPerMin, time.Minute)
+	authhttp.NewAuthHandler(authService).Register(mux, ratelimit.Middleware(loginLimiter))
+
+	// 5. Middlewares globales: CORS envuelve a todo el router.
+	handler := httpx.CORS(cfg.CORS.AllowedOrigins)(mux)
 
 	addr := fmt.Sprintf(":%d", cfg.App.Port)
 	log.Printf("Servidor escuchando en http://localhost%s", addr)
-	if err := http.ListenAndServe(addr, mux); err != nil {
+	if err := http.ListenAndServe(addr, handler); err != nil {
 		log.Fatalf("Error en servidor HTTP: %v", err)
 	}
 }
