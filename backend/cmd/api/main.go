@@ -15,12 +15,16 @@ import (
 	cataloghttp "buffalo-pos/internal/catalog/adapter/httpapi"
 	catalogrepo "buffalo-pos/internal/catalog/adapter/mysqlrepo"
 	catalogservice "buffalo-pos/internal/catalog/service"
+	ordershttp "buffalo-pos/internal/orders/adapter/httpapi"
+	ordersrepo "buffalo-pos/internal/orders/adapter/mysqlrepo"
+	ordersservice "buffalo-pos/internal/orders/service"
 	"buffalo-pos/internal/platform/config"
 	"buffalo-pos/internal/platform/httpx"
 	"buffalo-pos/internal/platform/ratelimit"
 	tableshttp "buffalo-pos/internal/tables/adapter/httpapi"
 	tablesrepo "buffalo-pos/internal/tables/adapter/mysqlrepo"
 	tablesservice "buffalo-pos/internal/tables/service"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -116,6 +120,10 @@ func main() {
 	// Catálogo y agotados (HU-04)
 	catalogService := catalogservice.NewCatalogService(catalogrepo.NewCatalogRepository(db))
 	cataloghttp.NewCatalogHandler(catalogService).Register(mux, authService)
+
+	// Comandas (HU-05)
+	orderService := ordersservice.NewOrderService(ordersrepo.NewOrderRepository(db))
+	ordershttp.NewOrderHandler(orderService).Register(mux, authService)
 
 	// 5. Middlewares globales: CORS envuelve a todo el router.
 	handler := httpx.CORS(cfg.CORS.AllowedOrigins)(mux)
