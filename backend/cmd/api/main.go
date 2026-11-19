@@ -15,6 +15,9 @@ import (
 	cataloghttp "buffalo-pos/internal/catalog/adapter/httpapi"
 	catalogrepo "buffalo-pos/internal/catalog/adapter/mysqlrepo"
 	catalogservice "buffalo-pos/internal/catalog/service"
+	kdshttp "buffalo-pos/internal/kds/adapter/httpapi"
+	kdsrepo "buffalo-pos/internal/kds/adapter/mysqlrepo"
+	kdsservice "buffalo-pos/internal/kds/service"
 	ordershttp "buffalo-pos/internal/orders/adapter/httpapi"
 	ordersrepo "buffalo-pos/internal/orders/adapter/mysqlrepo"
 	ordersservice "buffalo-pos/internal/orders/service"
@@ -24,7 +27,6 @@ import (
 	tableshttp "buffalo-pos/internal/tables/adapter/httpapi"
 	tablesrepo "buffalo-pos/internal/tables/adapter/mysqlrepo"
 	tablesservice "buffalo-pos/internal/tables/service"
-
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -124,6 +126,10 @@ func main() {
 	// Comandas (HU-05)
 	orderService := ordersservice.NewOrderService(ordersrepo.NewOrderRepository(db))
 	ordershttp.NewOrderHandler(orderService).Register(mux, authService)
+
+	// Cocina / KDS (HU-06)
+	kdsService := kdsservice.NewKDSService(kdsrepo.NewKDSRepository(db))
+	kdshttp.NewKDSHandler(kdsService).Register(mux, authService)
 
 	// 5. Middlewares globales: CORS envuelve a todo el router.
 	handler := httpx.CORS(cfg.CORS.AllowedOrigins)(mux)
