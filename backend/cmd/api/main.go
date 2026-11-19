@@ -15,6 +15,9 @@ import (
 	"buffalo-pos/internal/platform/config"
 	"buffalo-pos/internal/platform/httpx"
 	"buffalo-pos/internal/platform/ratelimit"
+	tableshttp "buffalo-pos/internal/tables/adapter/httpapi"
+	tablesrepo "buffalo-pos/internal/tables/adapter/mysqlrepo"
+	tablesservice "buffalo-pos/internal/tables/service"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -102,6 +105,10 @@ func main() {
 	// Límite de intentos de login por IP (login_rate_limit_per_min de security.yaml).
 	loginLimiter := ratelimit.New(cfg.Security.LoginRateLimitPerMin, time.Minute)
 	authhttp.NewAuthHandler(authService).Register(mux, ratelimit.Middleware(loginLimiter))
+
+	// Mesas (HU-03)
+	tableService := tablesservice.NewTableService(tablesrepo.NewTableRepository(db))
+	tableshttp.NewTableHandler(tableService).Register(mux, authService)
 
 	// 5. Middlewares globales: CORS envuelve a todo el router.
 	handler := httpx.CORS(cfg.CORS.AllowedOrigins)(mux)

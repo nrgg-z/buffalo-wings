@@ -1,6 +1,6 @@
 # API — Buffalo Wings POS
 
-Documentación de los endpoints del backend, pensada para quien consume la API desde el frontend (Vue 3).
+Documentación de los endpoints del backend 
 
 - **URL base (local):** `http://localhost:8080`
 - **Prefijo:** `/api/v1`
@@ -207,6 +207,67 @@ curl http://localhost:8080/api/v1/auth/me \
 | 401 | `unauthorized` | Falta la cabecera `Authorization` o no es de tipo `Bearer` |
 | 401 | `invalid_token` | Token manipulado, expirado, o su usuario ya no existe |
 | 403 | `user_inactive` | El empleado fue desactivado después de iniciar sesión |
+
+---
+
+## Mesas
+
+Estados en la API: `LIBRE`, `OCUPADA`, `RESERVADA`, `POR_LIMPIAR` (en la base: `FREE`, `OCCUPIED`, `RESERVED`, `CLEANING`).
+
+**Control de concurrencia:** cada mesa tiene `version`. Las operaciones de escritura reciben la `version` que el cliente vio; si otra persona modificó la mesa, responde `409 version_conflict` (actualiza el mapa y reintenta). Una escritura exitosa sube la versión.
+
+Objeto mesa:
+
+```json
+{
+  "id": 4, "code": "M-04", "zone": "SALON_CENTRAL",
+  "capacity": 4, "effective_capacity": 8,
+  "status": "LIBRE", "current_guests": 0,
+  "assigned_waiter_id": null, "merged_into_id": null, "version": 2
+}
+```
+
+`effective_capacity` suma la capacidad de las mesas combinadas a esta. `merged_into_id` indica que la mesa está combinada con la principal.
+
+### `GET /api/v1/tables`
+
+Mapa de mesas activas. **Roles:** `HOSTESS`, `WAITER`, `MANAGER`. Respuesta `200`: `{ "tables": [ ... ] }`.
+
+### `POST /api/v1/tables/{id}/assign`
+
+Sienta comensales en una mesa libre (pasa a `OCUPADA`). **Roles:** `HOSTESS`, `MANAGER`.
+
+```bash
+curl -X POST http://localhost:8080/api/v1/tables/1/assign \
+  -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{"guests":2,"version":1}'
+```
+
+Respuesta `200`: la mesa actualizada. Errores: `400 invalid_request`, `400 invalid_guests`, `400 over_capacity`, `404 table_not_found`, `409 table_not_free`, `409 table_merged`, `409 version_conflict`.
+
+### `POST /api/v1/tables/merge`
+
+Combina mesas **libres de la misma zona con códigos consecutivos** (por ejemplo `M-04` y `M-05`). La de código más bajo es la principal. **Roles:** `HOSTESS`, `MANAGER`.
+
+```bash
+curl -X POST http://localhost:8080/api/v1/tables/merge \
+  -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{"tables":[{"id":4,"version":1},{"id":5,"version":1}]}'
+```
+
+Respuesta `200`: la mesa principal. Errores: `400 invalid_request`, `400 invalid_merge` (menos de 2 o repetidas), `404 table_not_found`, `409 merge_not_allowed`, `409 version_conflict`.
+
+### `POST /api/v1/tables/{id}/clean`
+
+Marca la mesa como limpia: solo desde `POR_LIMPIAR`; queda `LIBRE` y libera las mesas que tenía combinadas. **Roles:** `WAITER`, `HOSTESS`, `MANAGER`.
+
+```bash
+curl -X POST http://localhost:8080/api/v1/tables/1/clean \
+  -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{"version":3}'
+```
+
+Respuesta `200`: la mesa actualizada. Errores: `400 invalid_request`, `404 table_not_found`, `409 table_not_cleaning`, `409 version_conflict`.
 
 ---
 
