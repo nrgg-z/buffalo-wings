@@ -12,6 +12,9 @@ import (
 	authhttp "buffalo-pos/internal/auth/adapter/httpapi"
 	authrepo "buffalo-pos/internal/auth/adapter/mysqlrepo"
 	authservice "buffalo-pos/internal/auth/service"
+	cataloghttp "buffalo-pos/internal/catalog/adapter/httpapi"
+	catalogrepo "buffalo-pos/internal/catalog/adapter/mysqlrepo"
+	catalogservice "buffalo-pos/internal/catalog/service"
 	"buffalo-pos/internal/platform/config"
 	"buffalo-pos/internal/platform/httpx"
 	"buffalo-pos/internal/platform/ratelimit"
@@ -109,6 +112,10 @@ func main() {
 	// Mesas (HU-03)
 	tableService := tablesservice.NewTableService(tablesrepo.NewTableRepository(db))
 	tableshttp.NewTableHandler(tableService).Register(mux, authService)
+
+	// Catálogo y agotados (HU-04)
+	catalogService := catalogservice.NewCatalogService(catalogrepo.NewCatalogRepository(db))
+	cataloghttp.NewCatalogHandler(catalogService).Register(mux, authService)
 
 	// 5. Middlewares globales: CORS envuelve a todo el router.
 	handler := httpx.CORS(cfg.CORS.AllowedOrigins)(mux)
