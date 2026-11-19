@@ -39,6 +39,32 @@ Desde Go 1.21, el comando `go` descarga solo el toolchain que pide `go.mod`
   - `DB_USER` y `DB_PASSWORD`: opcionales en local (hay valores por defecto de desarrollo).
 - El archivo `.env.example` de la raíz muestra los nombres de las variables.
 
+## Migraciones
+
+Los scripts de `migrations/` se aplican **en orden** y **a mano** (no hay herramienta
+de migraciones). La `0001` ya aplicada nunca se edita: los cambios van en un archivo nuevo.
+
+```bash
+# Desde backend/. Con el usuario de la aplicación:
+docker exec -i buffalo_mysql mysql -ubuffalo_user -pbuffalo_secret_pass buffalo_pos < migrations/0001_seed_catalog.sql
+docker exec -i buffalo_mysql mysql -ubuffalo_user -pbuffalo_secret_pass buffalo_pos < migrations/0002_dev_pins.sql
+
+# La 0003 crea triggers: con el binary log activo (MySQL 8 lo trae por defecto)
+# se debe aplicar como root. La contraseña local de root está en docker-compose.yml.
+docker exec -i buffalo_mysql mysql -uroot -proot_password_local buffalo_pos < migrations/0003_audit_immutable.sql
+```
+
+| Migración | Qué hace |
+|---|---|
+| `0001_seed_catalog.sql` | Tablas y datos semilla |
+| `0002_dev_pins.sql` | PINs de **desarrollo** para los empleados (1111 a 5555). Nunca en producción |
+| `0003_audit_immutable.sql` | Triggers que impiden `UPDATE` y `DELETE` en `audit_logs` (RF-07) |
+
+Si `buffalo_user` intenta aplicar la 0003, MySQL responde `ERROR 1419 ... SUPER privilege and binary logging is enabled`: es normal, hay que usar root.
+
+Con la 0003 aplicada, la bitácora no se puede limpiar con `DELETE`. Para reiniciar los datos de
+desarrollo, se recrea el volumen (`docker compose down -v`) y se vuelven a aplicar las migraciones.
+
 ## Cómo correrlo
 
 ```bash
