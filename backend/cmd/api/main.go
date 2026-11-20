@@ -12,6 +12,10 @@ import (
 	authhttp "buffalo-pos/internal/auth/adapter/httpapi"
 	authrepo "buffalo-pos/internal/auth/adapter/mysqlrepo"
 	authservice "buffalo-pos/internal/auth/service"
+	billinghttp "buffalo-pos/internal/billing/adapter/httpapi"
+	billingrepo "buffalo-pos/internal/billing/adapter/mysqlrepo"
+	billingdomain "buffalo-pos/internal/billing/domain"
+	billingservice "buffalo-pos/internal/billing/service"
 	cataloghttp "buffalo-pos/internal/catalog/adapter/httpapi"
 	catalogrepo "buffalo-pos/internal/catalog/adapter/mysqlrepo"
 	catalogservice "buffalo-pos/internal/catalog/service"
@@ -130,6 +134,10 @@ func main() {
 	// Cocina / KDS (HU-06)
 	kdsService := kdsservice.NewKDSService(kdsrepo.NewKDSRepository(db))
 	kdshttp.NewKDSHandler(kdsService).Register(mux, authService)
+
+	// Cobro y caja (HU-07)
+	billingService := billingservice.NewBillingService(billingrepo.NewBillingRepository(db), billingdomain.DefaultConfig())
+	billinghttp.NewBillingHandler(billingService).Register(mux, authService)
 
 	// 5. Middlewares globales: CORS envuelve a todo el router.
 	handler := httpx.CORS(cfg.CORS.AllowedOrigins)(mux)
