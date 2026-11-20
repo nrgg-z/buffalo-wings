@@ -197,7 +197,7 @@ curl http://localhost:8080/api/v1/auth/me \
     "role": "WAITER"
   },
   "token_expires_at": "2026-11-19T04:53:25Z"
-}
+}d
 ```
 
 **Errores**
@@ -296,3 +296,52 @@ mux.Handle("POST /api/v1/tables/{id}/assign",
 // Dentro del handler, quién hizo la petición:
 principal, _ := authhttp.PrincipalFrom(r.Context())
 ```
+
+---
+
+## Catálogo y agotados (HU-04)
+
+| Método | Ruta | Roles | Descripción |
+|---|---|---|---|
+| `GET` | `/api/v1/catalog/menu` | Autenticado | Devuelve categorías, productos, grupos y modificadores activos. |
+| `PATCH` | `/api/v1/catalog/products/{id}/availability` | `COOK`, `MANAGER`, `ADMIN` | Marca un producto como disponible/agotado (`{"is_available": false}`). |
+| `PATCH` | `/api/v1/catalog/modifiers/{id}/availability` | `COOK`, `MANAGER`, `ADMIN` | Marca un modificador/salsa como disponible/agotado (`{"is_available": false}`). |
+
+---
+
+## Comandas (HU-05)
+
+| Método | Ruta | Roles | Descripción |
+|---|---|---|---|
+| `GET` | `/api/v1/orders/table/{tableId}` | `WAITER`, `CASHIER`, `MANAGER`, `ADMIN` | Obtiene la comanda `OPEN` de la mesa con ítems y modificadores. |
+| `POST` | `/api/v1/orders/table/{tableId}/items` | `WAITER`, `MANAGER`, `ADMIN` | Abre comanda si no existe (requiere mesa ocupada) y agrega ítems. |
+| `POST` | `/api/v1/orders/items/{itemId}/void` | `WAITER`, `MANAGER`, `ADMIN` | Anula un ítem exigiendo `manager_code`, `manager_pin` (bcrypt) y `reason`. |
+
+---
+
+## Cocina / KDS (HU-06)
+
+| Método | Ruta | Roles | Descripción |
+|---|---|---|---|
+| `GET` | `/api/v1/kds/queue?station=KITCHEN\|BAR` | `COOK`, `WAITER`, `MANAGER`, `ADMIN` | Cola activa con minutos transcurridos y semáforo (`GREEN`, `YELLOW`, `RED`). |
+| `PATCH` | `/api/v1/kds/items/{id}/status` | `COOK`, `WAITER`, `MANAGER`, `ADMIN` | Avanza estado (`PENDING -> IN_PROGRESS/READY -> DELIVERED`). |
+| `GET` | `/api/v1/kds/ready` | `WAITER`, `COOK`, `MANAGER`, `ADMIN` | Lista platillos en estado `READY` pendientes de entrega. |
+
+---
+
+## Cobro y caja (HU-07)
+
+| Método | Ruta | Roles | Descripción |
+|---|---|---|---|
+| `GET` | `/api/v1/billing/orders/{id}/precheck` | `WAITER`, `CASHIER`, `MANAGER`, `ADMIN` | Calcula subtotal, IVA (13%), propina sugerida (10%) y totales. |
+| `POST` | `/api/v1/billing/orders/{id}/pay` | `CASHIER`, `MANAGER`, `ADMIN` | Registra pago (`CASH`, `CARD`, `QR`), genera DTE, cierra comanda (`PAID`) y pasa la mesa a `CLEANING`. |
+| `GET` | `/api/v1/billing/orders/{id}/receipt` | `WAITER`, `CASHIER`, `MANAGER`, `ADMIN` | Consulta el recibo y DTE generado para una comanda pagada. |
+
+---
+
+## Reportes y cierre (HU-08)
+
+| Método | Ruta | Roles | Descripción |
+|---|---|---|---|
+| `GET` | `/api/v1/reports/daily-summary?date=YYYY-MM-DD` | `MANAGER`, `ADMIN` | Resumen diario de ventas, desglose por método, top productos, anulaciones y tiempos de cocina (por defecto fecha UTC actual). |
+| `GET` | `/api/v1/reports/voids?date=YYYY-MM-DD` | `MANAGER`, `ADMIN` | Detalle de ítems anulados con motivo y gerente que autorizó. |
