@@ -2,15 +2,38 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
+	auditrepo "buffalo-pos/internal/audit/adapter/mysqlrepo"
+	authhttp "buffalo-pos/internal/auth/adapter/httpapi"
+	authrepo "buffalo-pos/internal/auth/adapter/mysqlrepo"
+	authservice "buffalo-pos/internal/auth/service"
+	billinghttp "buffalo-pos/internal/billing/adapter/httpapi"
+	billingrepo "buffalo-pos/internal/billing/adapter/mysqlrepo"
+	billingdomain "buffalo-pos/internal/billing/domain"
+	billingservice "buffalo-pos/internal/billing/service"
+	cataloghttp "buffalo-pos/internal/catalog/adapter/httpapi"
+	catalogrepo "buffalo-pos/internal/catalog/adapter/mysqlrepo"
+	catalogservice "buffalo-pos/internal/catalog/service"
+	kdshttp "buffalo-pos/internal/kds/adapter/httpapi"
+	kdsrepo "buffalo-pos/internal/kds/adapter/mysqlrepo"
+	kdsservice "buffalo-pos/internal/kds/service"
+	ordershttp "buffalo-pos/internal/orders/adapter/httpapi"
+	ordersrepo "buffalo-pos/internal/orders/adapter/mysqlrepo"
+	ordersservice "buffalo-pos/internal/orders/service"
 	"buffalo-pos/internal/platform/config"
-
+	"buffalo-pos/internal/platform/httpx"
+	"buffalo-pos/internal/platform/ratelimit"
+	reportshttp "buffalo-pos/internal/reports/adapter/httpapi"
+	reportsrepo "buffalo-pos/internal/reports/adapter/mysqlrepo"
+	reportsservice "buffalo-pos/internal/reports/service"
+	tableshttp "buffalo-pos/internal/tables/adapter/httpapi"
+	tablesrepo "buffalo-pos/internal/tables/adapter/mysqlrepo"
+	tablesservice "buffalo-pos/internal/tables/service"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -49,15 +72,13 @@ func main() {
 
 	// GET /api/v1/healthz
 	mux.HandleFunc("GET /api/v1/healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
+		status := http.StatusOK
 		dbStatus := "up"
-		if err := db.Ping(); err != nil {
+		if err := db.PingContext(r.Context()); err != nil {
 			dbStatus = "down"
-			w.WriteHeader(http.StatusServiceUnavailable)
-		} else {
-			w.WriteHeader(http.StatusOK)
+			status = http.StatusServiceUnavailable
 		}
-		json.NewEncoder(w).Encode(map[string]any{
+		httpx.WriteJSON(w, status, map[string]any{
 			"status":        "ok",
 			"service":       cfg.App.Name,
 			"db_status":     dbStatus,
@@ -67,8 +88,7 @@ func main() {
 
 	// GET /api/v1/config/public
 	mux.HandleFunc("GET /api/v1/config/public", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]any{
+		httpx.WriteJSON(w, http.StatusOK, map[string]any{
 			"pin_length":              cfg.Security.PINLength,
 			"inactivity_timeout_sec":  cfg.Security.InactivityTimeoutSec,
 			"tax_rate":                cfg.Business.TaxRate,
@@ -79,9 +99,59 @@ func main() {
 		})
 	})
 
+	// 4. Autenticación y bitácora (HU-02)
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		log.Fatal("Falta la variable de entorno JWT_SECRET")
+	}
+
+	userRepo := authrepo.NewUserRepository(db)
+	auditRepo := auditrepo.NewAuditRepository(db)
+	authService, err := authservice.NewAuthService(userRepo, auditRepo, authservice.Config{
+		PINLength:         cfg.Security.PINLength,
+		MaxFailedAttempts: cfg.Security.MaxFailedAttempts,
+		LockoutDuration:   time.Duration(cfg.Security.LockoutMinutes) * time.Minute,
+		TokenTTL:          time.Duration(cfg.Security.TokenExpirationMin) * time.Minute,
+		JWTSecret:         []byte(jwtSecret),
+	})
+	if err != nil {
+		log.Fatalf("Error creando servicio de autenticacion: %v", err)
+	}
+
+	// Límite de intentos de login por IP (login_rate_limit_per_min de security.yaml).
+	loginLimiter := ratelimit.New(cfg.Security.LoginRateLimitPerMin, time.Minute)
+	authhttp.NewAuthHandler(authService).Register(mux, ratelimit.Middleware(loginLimiter))
+
+	// Mesas (HU-03)
+	tableService := tablesservice.NewTableService(tablesrepo.NewTableRepository(db))
+	tableshttp.NewTableHandler(tableService).Register(mux, authService)
+
+	// Catálogo y agotados (HU-04)
+	catalogService := catalogservice.NewCatalogService(catalogrepo.NewCatalogRepository(db))
+	cataloghttp.NewCatalogHandler(catalogService).Register(mux, authService)
+
+	// Comandas (HU-05)
+	orderService := ordersservice.NewOrderService(ordersrepo.NewOrderRepository(db))
+	ordershttp.NewOrderHandler(orderService).Register(mux, authService)
+
+	// Cocina / KDS (HU-06)
+	kdsService := kdsservice.NewKDSService(kdsrepo.NewKDSRepository(db))
+	kdshttp.NewKDSHandler(kdsService).Register(mux, authService)
+
+	// Cobro y caja (HU-07)
+	billingService := billingservice.NewBillingService(billingrepo.NewBillingRepository(db), billingdomain.DefaultConfig())
+	billinghttp.NewBillingHandler(billingService).Register(mux, authService)
+
+	// Reportes y cierre (HU-08)
+	reportService := reportsservice.NewReportService(reportsrepo.NewReportRepository(db))
+	reportshttp.NewReportHandler(reportService).Register(mux, authService)
+
+	// 5. Middlewares globales: CORS envuelve a todo el router.
+	handler := httpx.CORS(cfg.CORS.AllowedOrigins)(mux)
+
 	addr := fmt.Sprintf(":%d", cfg.App.Port)
 	log.Printf("Servidor escuchando en http://localhost%s", addr)
-	if err := http.ListenAndServe(addr, mux); err != nil {
+	if err := http.ListenAndServe(addr, handler); err != nil {
 		log.Fatalf("Error en servidor HTTP: %v", err)
 	}
 }

@@ -69,6 +69,15 @@ func Load(configDir string) (*Config, error) {
 	if cfg.Security.PINLength < 4 {
 		return nil, fmt.Errorf("seguridad invalida: pin_length debe ser al menos 4")
 	}
+	if cfg.Security.MaxFailedAttempts < 1 || cfg.Security.LockoutMinutes < 1 {
+		return nil, fmt.Errorf("seguridad invalida: max_failed_attempts y lockout_minutes deben ser mayores que 0")
+	}
+	if cfg.Security.TokenExpirationMin < 1 {
+		return nil, fmt.Errorf("seguridad invalida: token_expiration_minutes debe ser mayor que 0")
+	}
+	if cfg.Security.LoginRateLimitPerMin < 1 {
+		return nil, fmt.Errorf("seguridad invalida: login_rate_limit_per_min debe ser mayor que 0")
+	}
 	if cfg.Business.KDSWarningMinutes >= cfg.Business.KDSCriticalMinutes {
 		return nil, fmt.Errorf("negocio invalido: kds_warning_minutes debe ser menor que critical")
 	}
