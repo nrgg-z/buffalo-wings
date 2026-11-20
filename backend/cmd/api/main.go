@@ -28,6 +28,9 @@ import (
 	"buffalo-pos/internal/platform/config"
 	"buffalo-pos/internal/platform/httpx"
 	"buffalo-pos/internal/platform/ratelimit"
+	reportshttp "buffalo-pos/internal/reports/adapter/httpapi"
+	reportsrepo "buffalo-pos/internal/reports/adapter/mysqlrepo"
+	reportsservice "buffalo-pos/internal/reports/service"
 	tableshttp "buffalo-pos/internal/tables/adapter/httpapi"
 	tablesrepo "buffalo-pos/internal/tables/adapter/mysqlrepo"
 	tablesservice "buffalo-pos/internal/tables/service"
@@ -138,6 +141,10 @@ func main() {
 	// Cobro y caja (HU-07)
 	billingService := billingservice.NewBillingService(billingrepo.NewBillingRepository(db), billingdomain.DefaultConfig())
 	billinghttp.NewBillingHandler(billingService).Register(mux, authService)
+
+	// Reportes y cierre (HU-08)
+	reportService := reportsservice.NewReportService(reportsrepo.NewReportRepository(db))
+	reportshttp.NewReportHandler(reportService).Register(mux, authService)
 
 	// 5. Middlewares globales: CORS envuelve a todo el router.
 	handler := httpx.CORS(cfg.CORS.AllowedOrigins)(mux)
