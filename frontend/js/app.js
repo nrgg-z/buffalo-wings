@@ -17,6 +17,7 @@ let state = {
 };
 let inactivityTimer = null;
 let clockInterval = null;
+let healthInterval = null;
 let activeViewCleanup = null;
 
 function cleanupActiveView() {
@@ -133,8 +134,28 @@ if (state.activeTab === "reportes") {
   `;
 }
 
+async function refreshBackendStatus() {
+  const dot = document.getElementById("backend-status-dot");
+  const label = document.getElementById("backend-status-label");
+  if (!dot || !label) return;
+
+  let online = false;
+  try {
+    const health = await api.healthz();
+    online = health?.status === "ok" && health?.db_status === "up";
+  } catch {
+    online = false;
+  }
+
+  dot.classList.toggle("bg-bw-forest", online);
+  dot.classList.toggle("bg-error", !online);
+  dot.classList.toggle("animate-pulse", online);
+  label.textContent = online ? "En línea · Multiplaza" : "Sin conexión · Multiplaza";
+}
+
 function renderShell() {
   clearInterval(clockInterval);
+  clearInterval(healthInterval);
   const tabs = [
     { id: "mesas", label: "Mesas" },
     { id: "comandas", label: "Comandas" },
@@ -166,8 +187,8 @@ function renderShell() {
 
       <div class="flex items-center gap-3">
         <div class="hidden xl:flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-lg text-xs font-medium">
-          <span class="w-2.5 h-2.5 rounded-full bg-bw-forest animate-pulse"></span>
-          <span>En línea · Multiplaza</span>
+          <span id="backend-status-dot" class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+          <span id="backend-status-label">Verificando · Multiplaza</span>
         </div>
         <div class="flex items-center gap-1.5 bg-surface-container-low px-3 py-1.5 rounded-lg text-xs font-bold">
           <span class="material-symbols-outlined text-base text-secondary">schedule</span>
@@ -202,6 +223,8 @@ function renderShell() {
   };
   tick();
   clockInterval = setInterval(tick, 15000);
+  refreshBackendStatus();
+  healthInterval = setInterval(refreshBackendStatus, 15000);
 
   renderActiveView();
 }

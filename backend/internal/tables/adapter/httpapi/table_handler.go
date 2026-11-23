@@ -37,7 +37,7 @@ func NewTableHandler(tables TableService) *TableHandler {
 
 // Register agrega las rutas de mesas al router. ADMIN siempre pasa.
 func (h *TableHandler) Register(mux *http.ServeMux, v authhttp.TokenVerifier) {
-	view := authhttp.Protected(v, authdomain.RoleHostess, authdomain.RoleWaiter, authdomain.RoleManager)
+	view := authhttp.Protected(v, authdomain.RoleHostess, authdomain.RoleWaiter, authdomain.RoleCashier, authdomain.RoleManager)
 	seat := authhttp.Protected(v, authdomain.RoleHostess, authdomain.RoleManager)
 	clean := authhttp.Protected(v, authdomain.RoleWaiter, authdomain.RoleHostess, authdomain.RoleManager)
 
