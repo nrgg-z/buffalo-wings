@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>Buffalo Wings El Salvador POS</title><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "inverse-primary": "#ffb599", "bw-charcoal-light": "#4C4B4C", "on-tertiary-fixed-variant": "#004c6e", "error-container": "#ffdad6", "tertiary": "#006591", "on-error-container": "#93000a", "surface": "#f9f9f9", "on-primary-container": "#591c00", "on-secondary-fixed-variant": "#494647", "bw-red": "#FD0102", "surface-tint": "#a63b00", "on-surface": "#1a1c1c", "bw-yellow": "#FFB400", "inverse-surface": "#2f3131", "tertiary-container": "#00a1e5", "on-background": "#1a1c1c", "bw-orange-deep": "F56516", "bg-paper": "#F1F1F1", "bw-charcoal-dark": "#3B3A3B", "secondary-fixed-dim": "#cbc5c6", "error": "#ba1a1a", "on-secondary-fixed": "#1d1b1c", "primary-container": "#ff671d", "primary": "#a63b00", "bg-paper-dark": "#E0E0E0", "on-secondary-container": "#656263", "secondary": "#615d5e", "on-tertiary-fixed": "#001e2f", "on-primary-fixed-variant": "#7f2b00", "surface-dim": "#dadada", "surface-variant": "#e2e2e2", "secondary-fixed": "#e7e1e2", "on-surface-variant": "#5a4138", "on-error": "#ffffff", "bw-forest": "#063C00", "outline": "#8e7166", "bg-paper-mid": "#E4E4E2", "bw-black": "#000000", "outline-variant": "#e2bfb2", "bw-lime": "#D2D023", "on-primary-fixed": "#370e00", "on-primary": "#ffffff", "surface-container": "#eeeeee", "on-tertiary-container": "#00334d", "background": "#f9f9f9", "bw-orange": "#FF671D", "bw-charcoal": "#3D3A3B", "bw-ink": "#1D120E", "primary-fixed": "#ffdbce", "on-tertiary": "#ffffff", "surface-container-highest": "#e2e2e2", "surface-container-lowest": "#ffffff", "secondary-container": "#e4dedf", "tertiary-fixed-dim": "#89ceff", "bw-white": "#FFFFFF", "surface-container-high": "#e8e8e8", "on-secondary": "#ffffff", "primary-fixed-dim": "#ffb599", "surface-container-low": "#f3f3f3", "inverse-on-surface": "#f1f1f1", "tertiary-fixed": "#c9e6ff", "surface-bright": "#f9f9f9" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "24px", "space-sm": "8px", "gutter": "16px", "space-md": "16px", "space-lg": "24px", "space-xs": "4px", "space-xl": "32px" }, "fontFamily": { "nav-link": [ "\"Bebas Neue, sans-serif\"" ], "body-md": [ "\"Inter, system-ui, sans-serif\"" ], "headline-sm": [ "\"Bebas Neue, sans-serif\"" ], "display-hero-mobile": [ "\"Anton, Impact, sans-serif\"" ], "category-item": [ "\"Bebas Neue, sans-serif\"" ], "display-hero": [ "\"Anton, Impact, sans-serif\"" ], "headline-md": [ "\"Anton, Impact, sans-serif\"" ], "headline-lg": [ "\"Anton, Impact, sans-serif\"" ], "label-sm": [ "\"Bebas Neue, sans-serif\"" ], "section-title": [ "\"Anton, sans-serif\"" ], "headline-lg-mobile": [ "\"Anton, Impact, sans-serif\"" ] }, "fontSize": { "nav-link": [ "15px", { "lineHeight": "1", "letterSpacing": "-0.01em", "fontWeight": "400" } ], "body-md": [ "13px", { "lineHeight": "1.2", "letterSpacing": "0", "fontWeight": "400" } ], "headline-sm": [ "36px", { "lineHeight": "1", "letterSpacing": "0.01em", "fontWeight": "700" } ], "display-hero-mobile": [ "96px", { "lineHeight": "0.85", "letterSpacing": "-0.02em", "fontWeight": "900" } ], "category-item": [ "13px", { "lineHeight": "1", "letterSpacing": "-0.01em", "fontWeight": "400" } ], "display-hero": [ "230px", { "lineHeight": "0.85", "letterSpacing": "-0.02em", "fontWeight": "900" } ], "headline-md": [ "70px", { "lineHeight": "0.9", "letterSpacing": "0", "fontWeight": "800" } ], "headline-lg": [ "160px", { "lineHeight": "0.85", "letterSpacing": "-0.03em", "fontWeight": "900" } ], "label-sm": [ "10px", { "lineHeight": "1.05", "letterSpacing": "0", "fontWeight": "400" } ], "section-title": [ "24px", { "lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "800" } ], "headline-lg-mobile": [ "72px", { "lineHeight": "0.9", "letterSpacing": "-0.02em", "fontWeight": "900" } ] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface select-none antialiased"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md shrink-0"><div class="w-10 h-10 rounded-lg bg-bw-orange flex items-center justify-center text-bw-white font-headline-sm text-headline-sm tracking-wider shadow-sm">BW</div><div class="flex flex-col justify-center"><span class="font-headline-sm text-nav-link tracking-wide uppercase text-on-surface leading-none">BUFFALO WINGS · EL SALVADOR</span><span class="font-label-sm text-label-sm tracking-widest text-primary uppercase mt-space-xs font-bold">PUNTO DE VENTA TÁCTIL</span></div></div><nav class="flex items-center gap-space-xs bg-surface-container-low p-space-xs rounded-full overflow-x-auto" data-active-classes="bg-primary text-on-primary font-headline-sm shadow-sm"><a class="px-space-md py-space-xs rounded-full font-nav-link text-nav-link uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap" data-path="mesas" href="#">MESAS</a><a class="px-space-md py-space-xs rounded-full font-nav-link text-nav-link uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap" data-path="comandas" href="#">COMANDAS</a><a class="px-space-md py-space-xs rounded-full font-nav-link text-nav-link uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap" data-path="cocina-kds" href="#">COCINA KDS</a><a class="px-space-md py-space-xs rounded-full font-nav-link text-nav-link uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap" data-path="barra-kds" href="#">BARRA KDS</a><a aria-current="page" class="px-space-md py-space-xs rounded-full uppercase tracking-wider transition-all whitespace-nowrap bg-primary text-on-primary font-headline-sm shadow-sm" data-path="caja" href="#">CAJA</a><a class="px-space-md py-space-xs rounded-full font-nav-link text-nav-link uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap" data-path="gerencia" href="#">GERENCIA</a><a class="px-space-md py-space-xs rounded-full font-nav-link text-nav-link uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap" data-path="reportes" href="#">REPORTES</a></nav><div class="flex items-center gap-space-md shrink-0"><div class="hidden lg:flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full"><span class="w-2.5 h-2.5 rounded-full bg-bw-forest animate-pulse"></span><span class="font-body-md text-body-md text-on-surface-variant font-medium">En línea • Multiplaza</span></div><div class="hidden md:flex flex-col text-right"><span class="font-headline-sm text-nav-link tracking-wider text-on-surface leading-none">12:45:18 PM</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">POS-TAB-04</span></div><div class="flex items-center gap-space-xs bg-surface-container-low pl-space-sm pr-space-xs py-space-xs rounded-full"><div class="flex flex-col text-right hidden sm:flex"><span class="font-body-md text-body-md font-bold text-on-surface leading-none">C. Méndez</span><span class="font-label-sm text-label-sm uppercase tracking-wide text-primary font-bold">Cajero / Gerente</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/ALJJyrBes7ZYLREM2niyjZRM_Xk_PQEJQ9IOfy3mKCzyP2Fsy_l-aj2nsyo3KZAf-ofZ5-V0wgZLW1_xXDlgpnikiZd4sy7Bh-T1PORdqP2UPOfwiDQm0eNeJl1Qwbwky3juG7NFSSPx6ibkXsVMJi3aug0TXnWqx3spC2IheNMpB-eEpZ7t-ghTV5jmOzyEMrN24dCVVO4odA3OJw07IoIUDu3GOrc2lc2Z3-144i-XV3t9Sc-hNxKbvW8MQHocl2t-sHi1zfxgzr9W_74"/></div></div></div></header><main class="w-full pt-16 bg-surface min-h-[calc(100vh-40px)]"><div class="flex flex-col w-full">
+<div class="w-full px-margin py-space-md flex flex-col gap-space-md">
+<!-- Breadcrumb / Status Strip -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm bg-surface-container-lowest px-space-md py-space-sm rounded-xl shadow-sm">
+<div class="flex items-center gap-space-sm">
+<a class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined text-nav-link">arrow_back</span>
+</a>
+<div class="flex items-center gap-space-xs font-nav-link text-nav-link text-on-surface-variant uppercase tracking-wider">
+<span>Mesas</span>
+<span class="opacity-40">/</span>
+<span>Salón Principal</span>
+<span class="opacity-40">/</span>
+<span class="text-primary font-bold">Cobro de Cuenta</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs text-bw-forest bg-surface-container-low px-space-sm py-1 rounded-full">
+<span class="material-symbols-outlined text-nav-link" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="font-body-md text-body-md font-semibold">DTE Transmitiendo en Tiempo Real</span>
+</div>
+<div class="h-4 w-px bg-surface-container-highest"></div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-nav-link">terminal</span>
+<span>Caja #02 · Turno T-12</span>
+</div>
+</div>
+</div>
+<!-- Main Touch Two-Column Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md items-start">
+<!-- Columna Izquierda: Desglose de Cuenta y Resumen Fiscal (5 Cols) -->
+<section class="lg:col-span-5 flex flex-col gap-space-md">
+<!-- Ticket Meta Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-primary/5 pointer-events-none"></div>
+<div class="flex items-start justify-between gap-space-sm">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold">CUENTA ACTIVA</span>
+<h1 class="font-headline-sm text-headline-sm text-on-surface uppercase tracking-tight leading-none mt-1">
+                MESA 06 • SALÓN
+              </h1>
+</div>
+<div class="bg-surface-container-low px-space-sm py-space-xs rounded-lg text-right">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block">Ticket</span>
+<span class="font-headline-sm text-nav-link text-bw-charcoal font-bold">#0892</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-space-xs mt-space-sm pt-space-xs bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex items-center gap-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-nav-link text-primary">person</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Mesero</span>
+<span class="font-body-md text-body-md font-semibold text-on-surface leading-tight">Nelson G.</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-nav-link text-bw-yellow">schedule</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Permanencia</span>
+<span class="font-body-md text-body-md font-semibold text-on-surface leading-tight">Hace 48 min (11:57 AM)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Items Table Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col">
+<div class="flex items-center justify-between pb-space-xs mb-space-xs">
+<span class="font-nav-link text-nav-link uppercase text-on-surface-variant font-bold tracking-wider">DETALLE DE CONSUMO</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider bg-surface-container px-space-xs py-0.5 rounded text-on-surface-variant font-bold">3 ÍTEMS</span>
+</div>
+<!-- Items Scroll List -->
+<div class="flex flex-col gap-space-sm divide-y-0">
+<!-- Item 1 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low/60 flex items-start justify-between gap-space-sm hover:bg-surface-container-low transition-colors">
+<div class="flex gap-space-sm">
+<span class="w-6 h-6 rounded bg-primary text-on-primary font-headline-sm text-nav-link flex items-center justify-center shrink-0">2</span>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-bold text-on-surface">(12) Traditional Wings</span>
+<span class="font-label-sm text-label-sm uppercase text-primary font-bold mt-0.5">Salsa: Atomic Hot • Dip: Blue Cheese</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">2 x $14.50 c/u</span>
+</div>
+</div>
+<span class="font-body-md text-body-md font-bold text-on-surface shrink-0">$29.00</span>
+</div>
+<!-- Item 2 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low/60 flex items-start justify-between gap-space-sm hover:bg-surface-container-low transition-colors">
+<div class="flex gap-space-sm">
+<span class="w-6 h-6 rounded bg-surface-container-highest text-on-surface font-headline-sm text-nav-link flex items-center justify-center shrink-0">2</span>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-bold text-on-surface">Papas Twister Grande</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant font-medium mt-0.5">Sazonador cajún original</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">2 x $4.25 c/u</span>
+</div>
+</div>
+<span class="font-body-md text-body-md font-bold text-on-surface shrink-0">$8.50</span>
+</div>
+<!-- Item 3 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low/60 flex items-start justify-between gap-space-sm hover:bg-surface-container-low transition-colors">
+<div class="flex gap-space-sm">
+<span class="w-6 h-6 rounded bg-surface-container-highest text-on-surface font-headline-sm text-nav-link flex items-center justify-center shrink-0">2</span>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-bold text-on-surface">Bebida Refill</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant font-medium mt-0.5">Coca-Cola Zero (Vaso 24oz)</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">2 x $1.16 c/u</span>
+</div>
+</div>
+<span class="font-body-md text-body-md font-bold text-on-surface shrink-0">$2.32</span>
+</div>
+</div>
+<!-- Totals Calculation Block -->
+<div class="mt-space-md pt-space-md flex flex-col gap-space-xs bg-surface-container-low p-space-md rounded-xl">
+<div class="flex justify-between items-center text-on-surface-variant font-body-md text-body-md">
+<span>Subtotal Gravado</span>
+<span class="font-semibold text-on-surface">$39.82</span>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant font-body-md text-body-md">
+<span class="flex items-center gap-1">
+                IVA (13% incluido)
+                <span class="material-symbols-outlined text-nav-link text-on-surface-variant/70">info</span>
+</span>
+<span class="font-semibold text-on-surface">$5.18</span>
+</div>
+<!-- Voluntary Tip Interactive Toggle -->
+<label class="flex items-center justify-between p-space-xs rounded-lg bg-surface-container cursor-pointer select-none hover:bg-surface-container-high transition-colors my-1">
+<div class="flex items-center gap-space-sm">
+<input checked="" class="w-4 h-4 rounded text-primary focus:ring-0 accent-primary cursor-pointer" id="tip-toggle" type="checkbox"/>
+<span class="font-body-md text-body-md font-medium text-on-surface">Propina voluntaria sugerida (10%)</span>
+</div>
+<span class="font-body-md text-body-md font-bold text-primary" id="tip-amount">+$3.98</span>
+</label>
+<!-- Grand Total Block -->
+<div class="pt-space-xs mt-space-xs flex items-baseline justify-between">
+<div class="flex flex-col">
+<span class="font-nav-link text-nav-link uppercase text-on-surface tracking-wider font-bold">TOTAL PENDIENTE</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">Saldo exacto a liquidar</span>
+</div>
+<div class="text-right">
+<span class="font-headline-md text-headline-sm sm:text-headline-md text-bw-orange tracking-tight leading-none font-black" id="total-display">$45.00</span>
+</div>
+</div>
+</div>
+<!-- Secondary Actions Under Summary -->
+<div class="grid grid-cols-2 gap-space-sm mt-space-md">
+<button class="flex items-center justify-center gap-space-xs py-space-sm px-space-md rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-nav-link text-nav-link uppercase tracking-wider transition-all shadow-sm active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined text-nav-link">call_split</span>
+<span>Dividir Cuenta</span>
+</button>
+<button class="flex items-center justify-center gap-space-xs py-space-sm px-space-md rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-nav-link text-nav-link uppercase tracking-wider transition-all shadow-sm active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined text-nav-link">print</span>
+<span>Reimprimir Precuenta</span>
+</button>
+</div>
+</div>
+<!-- Auditoría Rápida Fiscal -->
+<div class="bg-surface-container-lowest rounded-xl p-space-sm flex items-center justify-between text-on-surface-variant shadow-sm text-label-sm font-label-sm uppercase">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-nav-link text-bw-forest">verified_user</span>
+<span>Firma Electrónica DTE SV: <strong class="text-on-surface">CERTIFICADA</strong></span>
+</div>
+<span class="text-on-surface-variant font-mono">DTE-01-M06-2024</span>
+</div>
+</section>
+<!-- Columna Derecha: Formas de Pago y Teclado Táctil (7 Cols) -->
+<section class="lg:col-span-7 flex flex-col gap-space-md">
+<!-- Payment Methods Tabs -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-bold block mb-space-xs">SELECCIONAR MÉTODO DE PAGO</span>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-xs" id="payment-tabs">
+<!-- Efectivo (Active) -->
+<button class="payment-method-btn flex flex-col items-center justify-center gap-space-xs py-space-md px-space-xs rounded-xl bg-bw-orange text-on-primary shadow-sm transition-transform active:scale-95" data-payment="cash" type="button">
+<span class="material-symbols-outlined text-headline-sm" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-nav-link text-nav-link uppercase tracking-wider leading-none">EFECTIVO</span>
+<span class="font-label-sm text-label-sm uppercase text-on-primary/80">USD ($)</span>
+</button>
+<!-- Tarjeta -->
+<button class="payment-method-btn flex flex-col items-center justify-center gap-space-xs py-space-md px-space-xs rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-transform active:scale-95" data-payment="card" type="button">
+<span class="material-symbols-outlined text-headline-sm">credit_card</span>
+<span class="font-nav-link text-nav-link uppercase tracking-wider leading-none">TARJETA</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">POS Wompi/BAC</span>
+</button>
+<!-- Mixto -->
+<button class="payment-method-btn flex flex-col items-center justify-center gap-space-xs py-space-md px-space-xs rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-transform active:scale-95" data-payment="mixed" type="button">
+<span class="material-symbols-outlined text-headline-sm">point_of_sale</span>
+<span class="font-nav-link text-nav-link uppercase tracking-wider leading-none">MIXTO</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">2+ Formas</span>
+</button>
+<!-- Puntos Leal -->
+<button class="payment-method-btn flex flex-col items-center justify-center gap-space-xs py-space-md px-space-xs rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-transform active:scale-95" data-payment="points" type="button">
+<span class="material-symbols-outlined text-headline-sm text-bw-yellow" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-nav-link text-nav-link uppercase tracking-wider leading-none">LEAL BW</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">Puntos club</span>
+</button>
+</div>
+</div>
+<!-- Cash Register Operations & Numeric Keypad -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<!-- Monto Recibido + Cambio Banner -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-md items-center">
+<!-- Monto Recibido Input View -->
+<div class="md:col-span-7 flex flex-col bg-surface-container-low p-space-sm rounded-xl">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold text-on-surface-variant">MONTO RECIBIDO</span>
+<span class="font-label-sm text-label-sm uppercase text-primary font-bold">DÓLARES (USD)</span>
+</div>
+<div class="flex items-center gap-space-xs mt-1">
+<span class="font-headline-sm text-headline-sm text-on-surface-variant">$</span>
+<input class="w-full bg-transparent font-headline-md text-headline-sm sm:text-headline-md text-on-surface font-black tracking-tight focus:outline-none cursor-default select-all" id="amount-received-input" readonly="" type="text" value="50.00"/>
+</div>
+</div>
+<!-- Cambio a Entregar (Verde Sutil) -->
+<div class="md:col-span-5 flex flex-col justify-center bg-bw-forest/10 p-space-sm rounded-xl h-full">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold text-bw-forest">CAMBIO A ENTREGAR</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-headline-md text-headline-sm sm:text-headline-md text-bw-forest font-black tracking-tight leading-none" id="change-display">$5.00</span>
+</div>
+<span class="font-label-sm text-label-sm text-bw-forest uppercase font-bold mt-1">Vuelto Suficiente</span>
+</div>
+</div>
+<!-- Quick Cash Bill Presets (El Salvador USD) -->
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">BILLETES RÁPIDOS &amp; MONTO EXACTO</span>
+<div class="grid grid-cols-4 gap-space-xs">
+<button class="quick-cash-btn py-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-nav-link tracking-wide shadow-sm active:scale-95 transition-all" data-value="20" type="button">
+                $20.00
+              </button>
+<button class="quick-cash-btn py-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-nav-link tracking-wide shadow-sm active:scale-95 transition-all ring-2 ring-primary/40" data-value="50" type="button">
+                $50.00
+              </button>
+<button class="quick-cash-btn py-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-nav-link tracking-wide shadow-sm active:scale-95 transition-all" data-value="100" type="button">
+                $100.00
+              </button>
+<button class="quick-cash-btn py-space-sm rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-primary font-headline-sm text-nav-link tracking-wide shadow-sm active:scale-95 transition-all font-bold" data-value="exact" type="button">
+                EXACTO
+              </button>
+</div>
+</div>
+<!-- Keypad Táctil Robusto de Cajero -->
+<div class="grid grid-cols-3 gap-space-xs pt-space-xs">
+<!-- Row 1 -->
+<button class="keypad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-headline-sm text-headline-sm flex items-center justify-center shadow-sm active:scale-95 transition-transform" data-key="1" type="button">1</button>
+<button class="keypad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-headline-sm text-headline-sm flex items-center justify-center shadow-sm active:scale-95 transition-transform" data-key="2" type="button">2</button>
+<button class="keypad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-headline-sm text-headline-sm flex items-center justify-center shadow-sm active:scale-95 transition-transform" data-key="3" type="button">3</button>
+<!-- Row 2 -->
+<button class="keypad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-headline-sm text-headline-sm flex items-center justify-center shadow-sm active:scale-95 transition-transform" data-key="4" type="button">4</button>
+<button class="keypad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-headline-sm text-headline-sm flex items-center justify-center shadow-sm active:scale-95 transition-transform" data-key="5" type="button">5</button>
+<button class="keypad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-headline-sm text-headline-sm flex items-center justify-center shadow-sm active:scale-95 transition-transform" data-key="6" type="button">6</button>
+<!-- Row 3 -->
+<button class="keypad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-headline-sm text-headline-sm flex items-center justify-center shadow-sm active:scale-95 transition-transform" data-key="7" type="button">7</button>
+<button class="keypad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-headline-sm text-headline-sm flex items-center justify-center shadow-sm active:scale-95 transition-transform" data-key="8" type="button">8</button>
+<button class="keypad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-headline-sm text-headline-sm flex items-center justify-center shadow-sm active:scale-95 transition-transform" data-key="9" type="button">9</button>
+<!-- Row 4 -->
+<button class="keypad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-headline-sm text-headline-sm flex items-center justify-center shadow-sm active:scale-95 transition-transform" data-key="00" type="button">00</button>
+<button class="keypad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-headline-sm text-headline-sm flex items-center justify-center shadow-sm active:scale-95 transition-transform" data-key="0" type="button">0</button>
+<button class="keypad-btn h-14 rounded-xl bg-surface-container-high hover:bg-error-container text-error font-headline-sm flex items-center justify-center shadow-sm active:scale-95 transition-transform" data-key="backspace" type="button">
+<span class="material-symbols-outlined text-headline-sm">backspace</span>
+</button>
+</div>
+</div>
+<!-- DTE (Documento Tributario Electrónico - El Salvador) Selector -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold text-on-surface-variant">TIPO DE DOCUMENTO TRIBUTARIO (DTE)</span>
+<span class="font-label-sm text-label-sm uppercase text-bw-forest font-bold">Hacienda SV Conectada</span>
+</div>
+<div class="grid grid-cols-2 gap-space-xs">
+<label class="flex items-center gap-space-xs p-space-sm rounded-lg bg-surface-container cursor-pointer hover:bg-surface-container-high transition-colors">
+<input checked="" class="text-primary accent-primary w-4 h-4 cursor-pointer" name="dte_type" type="radio" value="consumidor_final"/>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-bold text-on-surface leading-tight">Factura Consumidor Final</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sin NRC / Venta Común</span>
+</div>
+</label>
+<label class="flex items-center gap-space-xs p-space-sm rounded-lg bg-surface-container cursor-pointer hover:bg-surface-container-high transition-colors">
+<input class="text-primary accent-primary w-4 h-4 cursor-pointer" name="dte_type" type="radio" value="credito_fiscal"/>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-bold text-on-surface leading-tight">Comprobante Crédito Fiscal</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Requiere NRC &amp; NIT/DUI</span>
+</div>
+</label>
+</div>
+<!-- CCF Optional Expanded Info -->
+<div class="hidden grid grid-cols-2 gap-space-sm pt-space-xs" id="ccf-fields">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant font-bold">NRC del Cliente:</span>
+<input class="bg-surface-container-low px-space-sm py-space-xs rounded-lg text-body-md font-body-md text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Ej. 123456-7" type="text"/>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant font-bold">Razón Social:</span>
+<input class="bg-surface-container-low px-space-sm py-space-xs rounded-lg text-body-md font-body-md text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Nombre de Empresa S.A. de C.V." type="text"/>
+</div>
+</div>
+</div>
+<!-- Master Checkout Action Button -->
+<button class="w-full py-space-md px-space-lg rounded-xl bg-bw-orange hover:bg-primary-container text-on-primary font-headline-sm text-headline-sm uppercase tracking-wider flex items-center justify-center gap-space-md shadow-md active:scale-[0.99] transition-all" id="btn-checkout" type="button">
+<span class="material-symbols-outlined text-headline-sm">receipt_long</span>
+<span>COBRAR Y EMITIR FACTURA (DTE)</span>
+<span class="material-symbols-outlined text-headline-sm">arrow_forward</span>
+</button>
+</section>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    let pendingTotal = 45.00;
+    const baseTotalWithoutTip = 41.02;
+    const baseTotalWithTip = 45.00;
+    let currentInput = "50.00";
+    let isFreshInput = true;
+
+    const amountInput = document.getElementById('amount-received-input');
+    const changeDisplay = document.getElementById('change-display');
+    const totalDisplay = document.getElementById('total-display');
+    const tipToggle = document.getElementById('tip-toggle');
+    const tipAmountLabel = document.getElementById('tip-amount');
+    const ccfFields = document.getElementById('ccf-fields');
+    const dteRadios = document.querySelectorAll('input[name="dte_type"]');
+    const paymentTabs = document.querySelectorAll('.payment-method-btn');
+    const quickCashBtns = document.querySelectorAll('.quick-cash-btn');
+    const keypadBtns = document.querySelectorAll('.keypad-btn');
+    const btnCheckout = document.getElementById('btn-checkout');
+
+    function updateChange() {
+      const received = parseFloat(currentInput) || 0;
+      const change = received - pendingTotal;
+      if (change >= 0) {
+        changeDisplay.textContent = "$" + change.toFixed(2);
+        changeDisplay.parentElement.classList.remove('bg-error-container/40');
+        changeDisplay.parentElement.classList.add('bg-bw-forest/10');
+        changeDisplay.classList.remove('text-error');
+        changeDisplay.classList.add('text-bw-forest');
+        btnCheckout.disabled = false;
+        btnCheckout.classList.remove('opacity-50', 'pointer-events-none');
+      } else {
+        changeDisplay.textContent = "-$" + Math.abs(change).toFixed(2);
+        changeDisplay.parentElement.classList.remove('bg-bw-forest/10');
+        changeDisplay.parentElement.classList.add('bg-error-container/40');
+        changeDisplay.classList.remove('text-bw-forest');
+        changeDisplay.classList.add('text-error');
+      }
+    }
+
+    function setAmount(val) {
+      currentInput = val;
+      amountInput.value = currentInput;
+      updateChange();
+    }
+
+    // Toggle Propina
+    tipToggle.addEventListener('change', function() {
+      if (this.checked) {
+        pendingTotal = baseTotalWithTip;
+        tipAmountLabel.classList.remove('line-through', 'opacity-40');
+      } else {
+        pendingTotal = baseTotalWithoutTip;
+        tipAmountLabel.classList.add('line-through', 'opacity-40');
+      }
+      totalDisplay.textContent = "$" + pendingTotal.toFixed(2);
+      updateChange();
+    });
+
+    // Quick Cash buttons
+    quickCashBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const val = this.getAttribute('data-value');
+        if (val === 'exact') {
+          setAmount(pendingTotal.toFixed(2));
+        } else {
+          setAmount(parseFloat(val).toFixed(2));
+        }
+        isFreshInput = true;
+      });
+    });
+
+    // Keypad Logic
+    keypadBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const key = this.getAttribute('data-key');
+        if (key === 'backspace') {
+          if (currentInput.length <= 1) {
+            currentInput = "0";
+          } else {
+            currentInput = currentInput.slice(0, -1);
+          }
+        } else {
+          if (isFreshInput) {
+            currentInput = key === "00" ? "0" : key;
+            isFreshInput = false;
+          } else {
+            if (currentInput === "0") {
+              currentInput = key;
+            } else {
+              if (currentInput.length < 7) {
+                currentInput += key;
+              }
+            }
+          }
+        }
+        amountInput.value = currentInput;
+        updateChange();
+      });
+    });
+
+    // DTE Radio change
+    dteRadios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        if (this.value === 'credito_fiscal') {
+          ccfFields.classList.remove('hidden');
+        } else {
+          ccfFields.classList.add('hidden');
+        }
+      });
+    });
+
+    // Payment Method selection style
+    paymentTabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        paymentTabs.forEach(t => {
+          t.classList.remove('bg-bw-orange', 'text-on-primary', 'shadow-sm');
+          t.classList.add('bg-surface-container-low', 'text-on-surface');
+          const subtext = t.querySelector('.text-on-primary\\/80');
+          if (subtext) {
+            subtext.classList.remove('text-on-primary/80');
+            subtext.classList.add('text-on-surface-variant');
+          }
+        });
+
+        this.classList.remove('bg-surface-container-low', 'text-on-surface');
+        this.classList.add('bg-bw-orange', 'text-on-primary', 'shadow-sm');
+        const sub = this.querySelector('.text-on-surface-variant');
+        if (sub) {
+          sub.classList.remove('text-on-surface-variant');
+          sub.classList.add('text-on-primary/80');
+        }
+      });
+    });
+
+    // Checkout Notification
+    btnCheckout.addEventListener('click', function() {
+      const received = parseFloat(currentInput) || 0;
+      if (received < pendingTotal) {
+        alert("El monto recibido es menor al total a pagar.");
+        return;
+      }
+      this.innerHTML = `
+        <span class="material-symbols-outlined animate-spin text-headline-sm">sync</span>
+        <span>TRANSMITIENDO FACTURA DTE...</span>
+      `;
+      setTimeout(() => {
+        this.innerHTML = `
+          <span class="material-symbols-outlined text-headline-sm">check_circle</span>
+          <span>TRANSACCIÓN EXITOSA • DTE GENERADO</span>
+        `;
+        this.classList.remove('bg-bw-orange');
+        this.classList.add('bg-bw-forest');
+      }, 900);
+    });
+
+    updateChange();
+  })();
+</script></main><footer class="w-full bg-surface-container-low shadow-[0_-1px_6px_rgba(0,0,0,0.02)]"><div class="h-10 w-full px-margin flex items-center justify-between text-on-surface-variant font-body-md text-body-md tracking-tight"><div class="flex items-center gap-space-sm truncate"><span class="w-2 h-2 rounded-full bg-bw-forest"></span><span class="truncate">Servidor Local: 192.168.1.120:8080 (SV-SIV-01) • Latencia: 4ms</span></div><div class="hidden md:flex items-center gap-space-md truncate"><span>Impresora Fiscal DTE: <strong class="text-on-surface font-semibold">OK</strong></span><span class="opacity-40">|</span><span>Conexión Ministerio de Hacienda: <strong class="text-on-surface font-semibold">En línea</strong></span></div><div class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold shrink-0">v4.8.2-bws-pos</div></div></footer></body></html>
