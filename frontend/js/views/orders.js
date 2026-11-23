@@ -20,6 +20,7 @@ export async function renderOrders(container, { user, initialTable, onSelectTabl
   let modalProduct = null;
   let voidTargetItem = null;
   let feedback = null;
+  let sendingOrder = false;
 
   const canTakeOrder = ["WAITER", "MANAGER", "ADMIN"].includes(user.role);
 
@@ -191,8 +192,8 @@ export async function renderOrders(container, { user, initialTable, onSelectTabl
                   <span>Subtotal nuevo</span>
                   <span>${money(draftSubtotal())}</span>
                 </div>
-                <button id="btn-send-order" class="w-full py-3 rounded-xl bg-bw-orange hover:bg-bw-orange-deep text-white font-display text-base uppercase tracking-wider shadow">
-                  Enviar a Cocina / Barra
+                <button id="btn-send-order" ${sendingOrder ? "disabled" : ""} class="w-full py-3 rounded-xl bg-bw-orange hover:bg-bw-orange-deep text-white font-display text-base uppercase tracking-wider shadow disabled:opacity-50">
+                  ${sendingOrder ? "Enviando..." : "Enviar a Cocina / Barra"}
                 </button>
               ` : `
                 <p class="text-xs text-secondary">Selecciona productos del menú para agregarlos a la comanda de <strong>${selectedTable.code}</strong>.</p>
@@ -387,7 +388,13 @@ export async function renderOrders(container, { user, initialTable, onSelectTabl
     });
 
     container.querySelector("#btn-send-order")?.addEventListener("click", async () => {
-      if (!draftItems.length || !selectedTable) return;
+      if (sendingOrder || !draftItems.length || !selectedTable) return;
+      sendingOrder = true;
+      const sendButton = container.querySelector("#btn-send-order");
+      if (sendButton) {
+        sendButton.disabled = true;
+        sendButton.textContent = "Enviando...";
+      }
       const payloadItems = draftItems.map((it) => ({
         product_id: it.product.id,
         quantity: it.quantity,
@@ -396,10 +403,12 @@ export async function renderOrders(container, { user, initialTable, onSelectTabl
       }));
       try {
         currentOrder = await api.createOrAppendOrder(selectedTable.id, payloadItems);
+        sendingOrder = false;
         draftItems = [];
         feedback = { type: "ok", text: `Comanda #${currentOrder.id} enviada a Cocina/Barra.` };
         render();
       } catch (err) {
+        sendingOrder = false;
         feedback = { type: "err", text: err.message };
         render();
       }

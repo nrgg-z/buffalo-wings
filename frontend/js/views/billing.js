@@ -95,7 +95,7 @@ export async function renderBilling(container, { user, initialTable, initialOrde
     return round2(precheck.total_without_tip + currentTip());
   }
 
-  function render() {
+  function render(focusSelector = null) {
     const total = currentTotal();
     const tip = currentTip();
     const receivedNum = paymentMethod === "CASH" ? Number(amountReceived || 0) : total;
@@ -408,8 +408,8 @@ export async function renderBilling(container, { user, initialTable, initialOrde
     });
 
     container.querySelector("#input-custom-tip")?.addEventListener("input", (e) => {
-      customTip = Math.max(0, Number(e.target.value || 0));
-      render();
+      customTip = e.target.value;
+      render("#input-custom-tip");
     });
 
     container.querySelectorAll(".btn-pay-method").forEach((btn) => {
@@ -421,7 +421,7 @@ export async function renderBilling(container, { user, initialTable, initialOrde
 
     container.querySelector("#input-received")?.addEventListener("input", (e) => {
       amountReceived = e.target.value;
-      render();
+      render("#input-received");
     });
 
     container.querySelectorAll(".btn-quick-cash").forEach((btn) => {
@@ -471,6 +471,8 @@ export async function renderBilling(container, { user, initialTable, initialOrde
         render();
       }
     });
+
+    if (focusSelector) container.querySelector(focusSelector)?.focus({ preventScroll: true });
   }
 
   await init();
