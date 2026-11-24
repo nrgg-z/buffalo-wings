@@ -137,6 +137,19 @@ func (r *TableRepository) Clean(ctx context.Context, ref port.TableRef) error {
 	return nil
 }
 
+func (r *TableRepository) Release(ctx context.Context, ref port.TableRef) error {
+	res, err := r.db.ExecContext(ctx, `
+		UPDATE dining_tables
+		SET status = 'CLEANING', current_guests = 0, assigned_waiter_id = NULL, version = version + 1
+		WHERE id = ? AND version = ? AND status = 'OCCUPIED'
+		  AND NOT EXISTS (SELECT 1 FROM orders WHERE table_id = dining_tables.id AND status = 'OPEN')`,
+		ref.ID, ref.Version)
+	if err != nil {
+		return fmt.Errorf("liberar mesa: %w", err)
+	}
+	return requireOneRow(res)
+}
+
 // requireOneRow convierte "0 filas afectadas" en ErrVersionConflict.
 func requireOneRow(res sql.Result) error {
 	n, err := res.RowsAffected()

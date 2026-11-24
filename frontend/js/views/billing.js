@@ -297,7 +297,7 @@ export async function renderBilling(container, { user, initialTable, initialOrde
                     ${paymentMethod === "CASH" ? `
                       <div class="space-y-2">
                         <label class="block text-xs font-bold uppercase text-secondary">Efectivo Recibido ($)</label>
-                        <input id="input-received" type="number" step="0.01" min="0" placeholder="${total.toFixed(2)}" value="${amountReceived}"
+                        <input id="input-received" type="text" inputmode="decimal" autocomplete="off" placeholder="${total.toFixed(2)}" value="${amountReceived}"
                           class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low border border-surface-container-high text-lg font-bold" />
                         <div class="flex flex-wrap gap-1.5">
                           <button data-quick-cash="${total.toFixed(2)}" class="btn-quick-cash px-3 py-1 rounded-lg bg-surface-container text-xs font-bold hover:bg-surface-container-high">Exacto (${money(total)})</button>
@@ -421,7 +421,15 @@ export async function renderBilling(container, { user, initialTable, initialOrde
 
     container.querySelector("#input-received")?.addEventListener("input", (e) => {
       amountReceived = e.target.value;
-      render("#input-received");
+      const input = e.target;
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      render();
+      const restored = container.querySelector("#input-received");
+      if (restored) {
+        restored.focus();
+        restored.setSelectionRange(start, end);
+      }
     });
 
     container.querySelectorAll(".btn-quick-cash").forEach((btn) => {

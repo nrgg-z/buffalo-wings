@@ -14,7 +14,7 @@ export function renderLogin(container, { onSuccess, notice = "" }) {
 
   container.innerHTML = `
     <div class="min-h-screen flex items-center justify-center p-4 bg-surface">
-      <div class="w-full max-w-md bg-surface-container-lowest rounded-2xl shadow-lg border border-surface-container-high p-6 sm:p-8">
+      <div class="w-full max-w-sm bg-surface-container-lowest rounded-2xl shadow-lg border border-surface-container-high p-5 sm:p-6">
         <div class="text-center mb-6">
           <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-bw-orange text-white font-display text-2xl mb-3 shadow-sm">BW</div>
           <h1 class="font-display text-3xl tracking-wide text-bw-ink uppercase">Buffalo Wings</h1>
@@ -26,11 +26,12 @@ export function renderLogin(container, { onSuccess, notice = "" }) {
 
         <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1.5">Código de Empleado</label>
         <div class="flex gap-2 mb-4">
-          <input id="emp-code" type="text" value="EMP-03" placeholder="Ej. EMP-03"
+          <input id="emp-code" type="text" placeholder="Ej. EMP-03"
             class="w-1/3 px-3 py-2.5 rounded-xl bg-surface-container-low border border-surface-container-high font-semibold text-sm uppercase focus:outline-none focus:ring-2 focus:ring-bw-orange" />
           <select id="emp-quick"
             class="w-2/3 px-3 py-2.5 rounded-xl bg-surface-container-low border border-surface-container-high text-xs font-medium focus:outline-none focus:ring-2 focus:ring-bw-orange">
-            ${DEV_USERS.map((u) => `<option value="${u.code}" ${u.code === "EMP-03" ? "selected" : ""}>${u.label}</option>`).join("")}
+            <option value="" selected>Seleccionar empleado...</option>
+            ${DEV_USERS.map((u) => `<option value="${u.code}">${u.label}</option>`).join("")}
           </select>
         </div>
 
@@ -41,11 +42,11 @@ export function renderLogin(container, { onSuccess, notice = "" }) {
 
         <div class="grid grid-cols-3 gap-2.5 mb-4">
           ${[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => `
-            <button type="button" data-num="${n}" class="keypad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container font-bold text-xl text-bw-ink active:scale-95 transition">${n}</button>
+            <button type="button" data-num="${n}" class="keypad-btn h-12 rounded-xl bg-surface-container-low hover:bg-surface-container font-bold text-xl text-bw-ink active:scale-95 transition">${n}</button>
           `).join("")}
-          <button type="button" id="pin-clear" class="h-14 rounded-xl bg-surface-container text-secondary font-semibold text-xs uppercase hover:bg-surface-container-high active:scale-95 transition">Limpiar</button>
-          <button type="button" data-num="0" class="keypad-btn h-14 rounded-xl bg-surface-container-low hover:bg-surface-container font-bold text-xl text-bw-ink active:scale-95 transition">0</button>
-          <button type="button" id="pin-back" class="h-14 rounded-xl bg-surface-container text-secondary flex items-center justify-center hover:bg-surface-container-high active:scale-95 transition">
+          <button type="button" id="pin-clear" class="h-12 rounded-xl bg-surface-container text-secondary font-semibold text-xs uppercase hover:bg-surface-container-high active:scale-95 transition">Limpiar</button>
+          <button type="button" data-num="0" class="keypad-btn h-12 rounded-xl bg-surface-container-low hover:bg-surface-container font-bold text-xl text-bw-ink active:scale-95 transition">0</button>
+          <button type="button" id="pin-back" class="h-12 rounded-xl bg-surface-container text-secondary flex items-center justify-center hover:bg-surface-container-high active:scale-95 transition">
             <span class="material-symbols-outlined">backspace</span>
           </button>
         </div>
@@ -55,9 +56,6 @@ export function renderLogin(container, { onSuccess, notice = "" }) {
           Iniciar Turno
         </button>
 
-        <p class="text-[11px] text-center text-secondary mt-4">
-          Dev PINs: EMP-01 (1111) · EMP-02 (2222) · EMP-03 (3333) · EMP-04 (4444) · EMP-05 (5555)
-        </p>
       </div>
     </div>
   `;

@@ -169,13 +169,13 @@ function renderShell() {
   appEl.innerHTML = `
     <header class="fixed top-0 left-0 right-0 z-50 h-16 bg-surface-container-lowest/95 backdrop-blur border-b border-surface-container-high px-4 lg:px-6 flex items-center justify-between gap-4">
       <div class="flex items-center gap-4">
-        <div class="flex items-center gap-2.5">
+        <button id="brand-home" type="button" aria-label="Ir a Mesas" class="flex items-center gap-2.5 text-left">
           <div class="w-9 h-9 rounded-lg bg-bw-orange text-white font-display flex items-center justify-center text-lg">BW</div>
           <div class="flex flex-col leading-none">
             <span class="font-display text-base text-bw-ink tracking-wider uppercase">Buffalo Wings</span>
             <span class="text-[10px] font-bold text-secondary tracking-wider uppercase">El Salvador · POS</span>
           </div>
-        </div>
+        </button>
         <nav class="hidden md:flex items-center gap-1 p-1 bg-surface-container-low rounded-xl">
           ${tabs.map((t) => `
             <button data-tab="${t.id}" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition ${
@@ -210,6 +210,12 @@ function renderShell() {
   `;
 
   appEl.querySelector("#btn-logout").addEventListener("click", () => logout());
+  appEl.querySelector("#brand-home").addEventListener("click", () => {
+    state.activeTab = "mesas";
+    state.selectedTable = null;
+    state.selectedOrder = null;
+    renderShell();
+  });
   appEl.querySelectorAll(".nav-tab").forEach((btn) => {
     btn.addEventListener("click", () => {
       state.activeTab = btn.dataset.tab;

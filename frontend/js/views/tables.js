@@ -16,10 +16,12 @@ const ERROR_MESSAGES = {
   merge_not_allowed: "Solo puedes combinar mesas LIBRES de la misma zona con códigos consecutivos (ej. M-04 y M-05).",
   invalid_merge: "Selecciona al menos 2 mesas diferentes para combinar.",
   table_not_cleaning: "Solo se pueden limpiar mesas en estado POR_LIMPIAR.",
+  table_has_open_order: "La mesa tiene una comanda activa y no se puede liberar desde aquí.",
 };
 
 export async function renderTables(container, { user, onOpenOrder }) {
   let tables = [];
+  let tablesWithoutOrder = new Set();
   let selectedZone = "TODAS";
   let mergeMode = false;
   let mergeSelection = []; // [{ id, version, code }]
@@ -39,6 +41,12 @@ export async function renderTables(container, { user, onOpenOrder }) {
     try {
       const res = await api.getTables();
       tables = res.tables || [];
+      const occupied = tables.filter((t) => t.status === "OCUPADA" && !t.merged_into_id);
+      const orderChecks = await Promise.all(occupied.map(async (t) => {
+        try { await api.getTableOrder(t.id); return [t.id, false]; }
+        catch (err) { return [t.id, err.status === 404]; }
+      }));
+      tablesWithoutOrder = new Set(orderChecks.filter(([, missing]) => missing).map(([id]) => id));
       mergeSelection = [];
       render();
     } catch (err) {
@@ -173,7 +181,6 @@ export async function renderTables(container, { user, onOpenOrder }) {
                 </div>
 
                 <div class="flex items-center justify-between gap-2 pt-1">
-                  <span class="text-[10px] text-secondary font-mono">v${t.version} · #${t.id}</span>
                   <div class="flex gap-2">
                     ${!mergeMode && t.status === "LIBRE" && !isMergedChild && canAssignOrMerge ? `
                       <button data-assign="${t.id}" class="btn-assign px-3 py-1.5 rounded-lg bg-bw-orange hover:bg-bw-orange-deep text-white text-xs font-bold uppercase">
@@ -184,6 +191,9 @@ export async function renderTables(container, { user, onOpenOrder }) {
                       <button data-order="${t.id}" class="btn-open-order px-3 py-1.5 rounded-lg bg-bw-ink hover:opacity-90 text-white text-xs font-bold uppercase">
                         Ver Comanda
                       </button>
+                    ` : ""}
+                    ${!mergeMode && t.status === "OCUPADA" && !isMergedChild && canClean && tablesWithoutOrder.has(t.id) ? `
+                      <button data-release="${t.id}" class="btn-release px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold uppercase">Liberar mesa</button>
                     ` : ""}
                     ${!mergeMode && t.status === "POR_LIMPIAR" && !isMergedChild && canClean ? `
                       <button data-clean="${t.id}" class="btn-clean px-3 py-1.5 rounded-lg bg-bw-forest hover:opacity-90 text-white text-xs font-bold uppercase">
@@ -289,6 +299,22 @@ export async function renderTables(container, { user, onOpenOrder }) {
         try {
           await api.cleanTable(t.id, t.version);
           setFeedback("ok", `Mesa ${t.code} marcada como LIBRE.`);
+          await loadTables(true);
+        } catch (err) {
+          setFeedback("err", ERROR_MESSAGES[err.code] || err.message);
+          if (err.code === "version_conflict") await loadTables(true);
+          else render();
+        }
+      });
+    });
+
+    container.querySelectorAll(".btn-release").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const t = tables.find((x) => x.id === Number(btn.dataset.release));
+        if (!t) return;
+        try {
+          await api.releaseTable(t.id, t.version);
+          setFeedback("ok", `Mesa ${t.code} liberada y marcada POR LIMPIAR.`);
           await loadTables(true);
         } catch (err) {
           setFeedback("err", ERROR_MESSAGES[err.code] || err.message);

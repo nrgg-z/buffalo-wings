@@ -24,6 +24,7 @@ type TableService interface {
 	Assign(ctx context.Context, ref port.TableRef, guests int) (*domain.Table, error)
 	Merge(ctx context.Context, refs []port.TableRef) (*domain.Table, error)
 	MarkClean(ctx context.Context, ref port.TableRef) (*domain.Table, error)
+	Release(ctx context.Context, ref port.TableRef) (*domain.Table, error)
 }
 
 // TableHandler expone las rutas HTTP de mesas.
@@ -45,6 +46,7 @@ func (h *TableHandler) Register(mux *http.ServeMux, v authhttp.TokenVerifier) {
 	mux.Handle("POST /api/v1/tables/merge", seat(http.HandlerFunc(h.merge)))
 	mux.Handle("POST /api/v1/tables/{id}/assign", seat(http.HandlerFunc(h.assign)))
 	mux.Handle("POST /api/v1/tables/{id}/clean", clean(http.HandlerFunc(h.clean)))
+	mux.Handle("POST /api/v1/tables/{id}/release", clean(http.HandlerFunc(h.release)))
 }
 
 type tableResponse struct {
@@ -162,6 +164,27 @@ func (h *TableHandler) clean(w http.ResponseWriter, r *http.Request) {
 	t, err := h.tables.MarkClean(r.Context(), port.TableRef{ID: id, Version: req.Version})
 	if err != nil {
 		writeError(w, "marcar mesa limpia", err)
+		return
+	}
+	httpx.WriteJSON(w, http.StatusOK, toResponse(*t))
+}
+
+func (h *TableHandler) release(w http.ResponseWriter, r *http.Request) {
+	id, ok := pathID(w, r)
+	if !ok {
+		return
+	}
+	var req versionRequest
+	if !decode(w, r, &req) {
+		return
+	}
+	if req.Version == 0 {
+		badRequest(w, "Se requiere version")
+		return
+	}
+	t, err := h.tables.Release(r.Context(), port.TableRef{ID: id, Version: req.Version})
+	if err != nil {
+		writeError(w, "liberar mesa", err)
 		return
 	}
 	httpx.WriteJSON(w, http.StatusOK, toResponse(*t))

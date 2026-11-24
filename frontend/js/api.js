@@ -78,6 +78,8 @@ export const api = {
     request("/tables/merge", { method: "POST", body: { tables } }),
   cleanTable: (id, version) =>
     request(`/tables/${id}/clean`, { method: "POST", body: { version } }),
+  releaseTable: (id, version) =>
+    request(`/tables/${id}/release`, { method: "POST", body: { version } }),
 
   // Catálogo (HU-04)
   getCatalog: () => request("/catalog"),

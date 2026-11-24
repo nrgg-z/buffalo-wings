@@ -125,7 +125,7 @@ export async function renderReports(container, { user }) {
         </div>
 
         <!-- Desglose por Método de Pago + Top Productos -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
           <div class="lg:col-span-5 bg-surface-container-lowest rounded-2xl border border-surface-container-high p-5 shadow-sm space-y-4">
             <h2 class="font-display text-xl uppercase text-bw-ink">Desglose por Método de Pago</h2>
             ${methods.length ? `
