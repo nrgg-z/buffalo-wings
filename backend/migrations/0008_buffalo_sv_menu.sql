@@ -15,34 +15,18 @@ JOIN modifier_groups mg
   OR (mg.id = 2 AND mg.name = 'Aderezo Obligatorio')
 WHERE p.id IN (103, 107, 108, 109, 110, 111, 112);
 
--- Salsas y niveles picantes de la carta salvadoreña; incluye sabores pedidos para el menú.
+-- Selección corta de salsas clásicas y niveles picantes.
 -- NOT EXISTS evita repetir opciones si se vuelve a ejecutar la migración.
 INSERT INTO modifier_options (group_id, name, extra_price)
 SELECT 1, choices.name, 0.00
 FROM (
     SELECT 'Mild' AS name
     UNION ALL SELECT 'Nuclear'
-    UNION ALL SELECT 'Suicide'
     UNION ALL SELECT 'La Suicida'
-    UNION ALL SELECT 'La Atómica'
-    UNION ALL SELECT 'La 911'
     UNION ALL SELECT 'Teriyaki'
     UNION ALL SELECT 'Garlic Parmesan'
     UNION ALL SELECT 'Lemon Pepper'
     UNION ALL SELECT 'Honey BBQ'
-    UNION ALL SELECT 'Buffalo Original'
-    UNION ALL SELECT 'Buffalo Spicy Honey'
-    UNION ALL SELECT 'BBQ Chipotle'
-    UNION ALL SELECT 'BBQ Tradicional'
-    UNION ALL SELECT 'BBQ Ahumada'
-    UNION ALL SELECT 'Sésamo'
-    UNION ALL SELECT 'Roasted Garlic'
-    UNION ALL SELECT 'Thai'
-    UNION ALL SELECT 'Ala Pastor'
-    UNION ALL SELECT 'Macho Habanero'
-    UNION ALL SELECT 'Sriracha'
-    UNION ALL SELECT 'Chili & Lime'
-    UNION ALL SELECT 'Creamy Buffalo'
 ) AS choices
 WHERE NOT EXISTS (
     SELECT 1 FROM modifier_options mo
