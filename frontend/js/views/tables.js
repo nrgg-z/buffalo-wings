@@ -64,8 +64,11 @@ export async function renderTables(container, { user, onOpenOrder }) {
 
   function render() {
     const counts = { LIBRE: 0, OCUPADA: 0, POR_LIMPIAR: 0, RESERVADA: 0 };
+    const tableById = new Map(tables.map((t) => [t.id, t]));
+    const statusFor = (table) => table.merged_into_id ? (tableById.get(table.merged_into_id)?.status || table.status) : table.status;
     tables.forEach((t) => {
-      if (counts[t.status] !== undefined) counts[t.status]++;
+      const status = statusFor(t);
+      if (counts[status] !== undefined) counts[status]++;
     });
 
     const zones = ["TODAS", ...new Set(tables.map((t) => t.zone).filter(Boolean))];
@@ -124,7 +127,7 @@ export async function renderTables(container, { user, onOpenOrder }) {
               </button>
               ${mergeMode && mergeSelection.length >= 2 ? `
                 <button id="btn-confirm-merge" class="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-bw-forest text-white hover:opacity-90 transition">
-                  Confirmar (${mergeSelection.map((m) => m.code).join(" + ")})
+                  Principal: ${mergeSelection[0].code} · Unir ${mergeSelection.slice(1).map((m) => m.code).join(" + ")}
                 </button>
               ` : ""}
             ` : ""}
@@ -137,15 +140,19 @@ export async function renderTables(container, { user, onOpenOrder }) {
 
         ${mergeMode ? `
           <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-medium">
-            Modo combinación activo: toca 2 o más mesas <strong>LIBRES</strong> de la misma zona con códigos consecutivos (por ejemplo <strong>M-04</strong> y <strong>M-05</strong>) y luego presiona <strong>Confirmar</strong>.
+            Modo combinación activo: toca 2 o más mesas <strong>LIBRES</strong> de la misma zona con códigos consecutivos. La primera mesa seleccionada será la principal; luego presiona <strong>Confirmar</strong>.
           </div>
         ` : ""}
 
         <!-- Grid de mesas -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           ${visibleTables.map((t) => {
-            const meta = STATUS_META[t.status] || STATUS_META.LIBRE;
             const isMergedChild = t.merged_into_id !== null && t.merged_into_id !== undefined;
+            const parentTable = isMergedChild ? tableById.get(t.merged_into_id) : null;
+            const mergedChildren = tables.filter((candidate) => candidate.merged_into_id === t.id);
+            const groupTable = parentTable || t;
+            const displayStatus = statusFor(t);
+            const meta = STATUS_META[displayStatus] || STATUS_META.LIBRE;
             const isSelectedForMerge = mergeSelection.some((m) => m.id === t.id);
             const selectableMerge = mergeMode && t.status === "LIBRE" && !isMergedChild;
 
@@ -159,24 +166,25 @@ export async function renderTables(container, { user, onOpenOrder }) {
                   <div>
                     <div class="flex items-center gap-2">
                       <span class="font-display text-2xl text-bw-ink">${t.code}</span>
-                      ${isMergedChild ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-surface-container text-secondary uppercase">Unida</span>` : ""}
-                      ${t.effective_capacity > t.capacity ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-primary uppercase">Combinada</span>` : ""}
+                      ${isMergedChild ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${meta.badge} uppercase">Unida a ${parentTable?.code || "mesa principal"}</span>` : ""}
+                      ${mergedChildren.length ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-primary uppercase">Combinada</span>` : ""}
                     </div>
                     <div class="text-[11px] font-semibold text-secondary uppercase mt-0.5">${(t.zone || "").replaceAll("_", " ")}</div>
+                    ${mergedChildren.length ? `<div class="text-[11px] font-semibold text-bw-orange mt-1">Unidas: ${mergedChildren.map((child) => child.code).join(", ")}</div>` : ""}
                   </div>
                   <span class="px-2.5 py-1 rounded-full text-[11px] font-bold border ${meta.badge}">
-                    ${meta.label}
+                    ${isMergedChild ? `Unida a ${parentTable?.code || "principal"} · ${meta.label}` : meta.label}
                   </span>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2 text-xs bg-surface-container-low rounded-xl p-2.5">
                   <div>
                     <div class="text-[10px] uppercase text-secondary font-bold">Capacidad</div>
-                    <div class="font-bold text-on-surface">${t.effective_capacity} pers.</div>
+                    <div class="font-bold text-on-surface">${groupTable.effective_capacity} pers.</div>
                   </div>
                   <div>
                     <div class="text-[10px] uppercase text-secondary font-bold">Personas</div>
-                    <div class="font-bold text-on-surface">${t.current_guests || 0}</div>
+                    <div class="font-bold text-on-surface">${groupTable.current_guests || 0}</div>
                   </div>
                 </div>
 

@@ -12,6 +12,7 @@ const ITEM_STATUS = {
 
 export async function renderOrders(container, { user, initialTable, onSelectTable, onGoToBilling }) {
   let occupiedTables = [];
+  let allTables = [];
   let selectedTable = initialTable || null;
   let categories = [];
   let activeCatId = null;
@@ -28,7 +29,8 @@ export async function renderOrders(container, { user, initialTable, onSelectTabl
     container.innerHTML = `<div class="p-8 text-center text-sm text-secondary">Cargando comandas y menú...</div>`;
     try {
       const [tablesRes, catRes] = await Promise.all([api.getTables(), api.getCatalog()]);
-      occupiedTables = (tablesRes.tables || []).filter((t) => t.status === "OCUPADA" && !t.merged_into_id);
+      allTables = tablesRes.tables || [];
+      occupiedTables = allTables.filter((t) => t.status === "OCUPADA" && !t.merged_into_id);
       categories = catRes.categories || [];
       if (categories.length && !activeCatId) activeCatId = categories[0].id;
 
@@ -45,6 +47,15 @@ export async function renderOrders(container, { user, initialTable, onSelectTabl
     } catch (err) {
       container.innerHTML = `<div class="bg-red-50 border border-red-200 text-error rounded-2xl p-6 text-sm font-medium">${err.message}</div>`;
     }
+  }
+
+  function groupDetails(table) {
+    const children = allTables.filter((t) => t.merged_into_id === table.id);
+    const guestCount = table.current_guests + children.reduce((sum, t) => sum + t.current_guests, 0);
+    return {
+      label: children.length ? `${table.code} (+ ${children.map((t) => t.code).join(", ")})` : table.code,
+      guests: guestCount,
+    };
   }
 
   async function loadTableOrder() {
@@ -83,6 +94,7 @@ export async function renderOrders(container, { user, initialTable, onSelectTabl
     }
 
     const activeCat = categories.find((c) => c.id === activeCatId) || categories[0];
+    const selectedGroup = selectedTable ? groupDetails(selectedTable) : null;
 
     container.innerHTML = `
       <div class="space-y-4">
@@ -92,13 +104,13 @@ export async function renderOrders(container, { user, initialTable, onSelectTabl
             <div>
               <div class="text-[10px] font-bold uppercase tracking-widest text-secondary">Toma de Comandas</div>
               <h1 class="font-display text-2xl uppercase text-bw-ink leading-none mt-0.5">
-                Mesa ${selectedTable.code} ${currentOrder ? `· Comanda #${currentOrder.id}` : "· Sin comanda"}
+                Mesa ${selectedGroup?.label || selectedTable.code} ${selectedGroup ? `· ${selectedGroup.guests} pers.` : ""} ${currentOrder ? `· Comanda #${currentOrder.id}` : "· Sin comanda"}
               </h1>
             </div>
             <select id="select-order-table" class="px-3 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-xs font-bold">
               ${occupiedTables.map((t) => `
                 <option value="${t.id}" ${t.id === selectedTable.id ? "selected" : ""}>
-                  ${t.code} (${t.current_guests} pers. · ${t.zone.replaceAll("_", " ")})
+                  ${groupDetails(t).label} (${groupDetails(t).guests} pers. · ${t.zone.replaceAll("_", " ")})
                 </option>
               `).join("")}
             </select>

@@ -13,6 +13,7 @@ export async function renderBilling(container, { user, initialTable, initialOrde
   const canPay = ["CASHIER", "MANAGER", "ADMIN"].includes(user.role);
 
   let openAccounts = []; // [{ table, order }]
+  let allTables = [];
   let selectedOrderId = initialOrder?.id || null;
   let precheck = null;
   let activeOrder = null;
@@ -30,7 +31,8 @@ export async function renderBilling(container, { user, initialTable, initialOrde
     container.innerHTML = `<div class="p-8 text-center text-sm text-secondary">Cargando cuentas abiertas...</div>`;
     try {
       const tablesRes = await api.getTables();
-      const occupied = (tablesRes.tables || []).filter((t) => t.status === "OCUPADA" && !t.merged_into_id);
+      allTables = tablesRes.tables || [];
+      const occupied = allTables.filter((t) => t.status === "OCUPADA" && !t.merged_into_id);
 
       const results = await Promise.all(
         occupied.map(async (table) => {
@@ -66,6 +68,15 @@ export async function renderBilling(container, { user, initialTable, initialOrde
     }
   }
 
+  function groupDetails(table) {
+    const children = allTables.filter((t) => t.merged_into_id === table.id);
+    const guestCount = table.current_guests + children.reduce((sum, t) => sum + t.current_guests, 0);
+    return {
+      label: children.length ? `${table.code} (+ ${children.map((t) => t.code).join(", ")})` : table.code,
+      guests: guestCount,
+    };
+  }
+
   async function loadPrecheck(orderId) {
     const acc = openAccounts.find((a) => a.order.id === orderId);
     activeOrder = acc?.order || null;
@@ -98,6 +109,8 @@ export async function renderBilling(container, { user, initialTable, initialOrde
   function render(focusSelector = null) {
     const total = currentTotal();
     const tip = currentTip();
+    const selectedAccount = openAccounts.find((a) => a.order.id === selectedOrderId);
+    const selectedGroup = selectedAccount ? groupDetails(selectedAccount.table) : null;
     const receivedNum = paymentMethod === "CASH" ? Number(amountReceived || 0) : total;
     const change = paymentMethod === "CASH" ? round2(receivedNum - total) : 0;
 
@@ -195,7 +208,7 @@ export async function renderBilling(container, { user, initialTable, initialOrde
                       ? "bg-bw-orange text-white border-bw-orange"
                       : "bg-surface-container-lowest border-surface-container-high text-on-surface hover:border-bw-orange"
                   }">
-                    Mesa ${table.code} · #${order.id} (${money(order.subtotal)})
+                    Mesa ${groupDetails(table).label} · ${groupDetails(table).guests} pers. · #${order.id} (${money(order.subtotal)})
                   </button>
                 `).join("")}
               </div>
@@ -205,7 +218,7 @@ export async function renderBilling(container, { user, initialTable, initialOrde
                   <div class="flex items-center justify-between border-b border-surface-container-high pb-3">
                     <div>
                       <div class="text-[10px] font-bold uppercase tracking-widest text-secondary">Precuenta Oficial</div>
-                      <h2 class="font-display text-2xl uppercase text-bw-ink">Mesa ${precheck.table_code} · Comanda #${precheck.order_id}</h2>
+                      <h2 class="font-display text-2xl uppercase text-bw-ink">Mesa ${selectedGroup?.label || precheck.table_code} · ${selectedGroup ? `${selectedGroup.guests} pers. · ` : ""}Comanda #${precheck.order_id}</h2>
                     </div>
                     <span class="px-2.5 py-1 rounded-full text-[11px] font-bold uppercase bg-amber-50 text-amber-800 border border-amber-200">
                       Por cobrar
