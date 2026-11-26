@@ -98,9 +98,9 @@ func (t Table) CanClean() error {
 	return nil
 }
 
-// PlanMerge valida que las mesas se puedan combinar y devuelve la principal
-// (la de código más bajo) y las demás. Reglas: al menos 2 mesas, todas libres
-// y sin combinar, de la misma zona y con códigos consecutivos (M-04, M-05...).
+// PlanMerge valida que las mesas se puedan combinar y devuelve como principal
+// la primera seleccionada y las demás en su orden original. Reglas: al menos 2
+// mesas, todas libres y sin combinar, de la misma zona y con códigos consecutivos.
 func PlanMerge(tables []Table) (primary Table, others []Table, err error) {
 	if len(tables) < 2 {
 		return Table{}, nil, fmt.Errorf("%w: se requieren al menos 2 mesas", ErrInvalidMerge)
@@ -138,10 +138,10 @@ func PlanMerge(tables []Table) (primary Table, others []Table, err error) {
 		}
 	}
 
-	for _, n := range list[1:] {
-		others = append(others, n.t)
+	for _, t := range tables[1:] {
+		others = append(others, t)
 	}
-	return list[0].t, others, nil
+	return tables[0], others, nil
 }
 
 // splitCode separa "M-04" en el prefijo "M-" y el número 4.

@@ -1,5 +1,5 @@
--- Menú adicional de Buffalo Wings El Salvador.
--- Ejecutar después de 0007_catalog_expansion.sql. Las inserciones son idempotentes.
+-- Menú adicional de Buffalo Wings El Salvador
+-- Ejecutar después de 0007_catalog_expansion.sql. Las inserciones son idempotentes
 
 -- Grupo para los sándwiches disponibles en la carta.
 INSERT IGNORE INTO categories (id, name, station, sort_order) VALUES
