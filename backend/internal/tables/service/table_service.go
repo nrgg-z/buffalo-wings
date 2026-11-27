@@ -104,6 +104,14 @@ func (s *TableService) MarkClean(ctx context.Context, ref port.TableRef) (*domai
 	return s.get(ctx, ref.ID)
 }
 
+// Release libera una mesa ocupada sin comanda activa y la deja POR_LIMPIAR.
+func (s *TableService) Release(ctx context.Context, ref port.TableRef) (*domain.Table, error) {
+	if err := s.repo.Release(ctx, ref); err != nil {
+		return nil, err
+	}
+	return s.get(ctx, ref.ID)
+}
+
 func (s *TableService) get(ctx context.Context, id int64) (*domain.Table, error) {
 	tables, err := s.List(ctx)
 	if err != nil {

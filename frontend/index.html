@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buffalo Wings</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=2" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: "#f9f9f9",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f3f3f3",
+            "surface-container": "#eeeeee",
+            "surface-container-high": "#e8e8e8",
+            "on-surface": "#1a1c1c",
+            "on-surface-variant": "#5a4138",
+            primary: "#a63b00",
+            "primary-container": "#ff671d",
+            "on-primary-container": "#591c00",
+            secondary: "#615d5e",
+            error: "#ba1a1a",
+            "bw-orange": "#FF671D",
+            "bw-orange-deep": "#F56516",
+            "bw-ink": "#1D120E",
+            "bw-forest": "#063C00",
+            "bw-red": "#FD0102",
+            "bw-yellow": "#FFB400"
+          },
+          fontFamily: {
+            display: ["Anton", "Impact", "sans-serif"],
+            label: ["Bebas Neue", "sans-serif"],
+            body: ["Inter", "system-ui", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased min-h-screen">
+  <div id="app"></div>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

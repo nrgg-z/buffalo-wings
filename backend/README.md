@@ -52,6 +52,10 @@ docker exec -i buffalo_mysql mysql -ubuffalo_user -pbuffalo_secret_pass buffalo_
 # La 0003 crea triggers: con el binary log activo (MySQL 8 lo trae por defecto)
 # se debe aplicar como root. La contraseña local de root está en docker-compose.yml.
 docker exec -i buffalo_mysql mysql -uroot -proot_password_local buffalo_pos < migrations/0003_audit_immutable.sql
+
+# Amplía categorías/productos del catálogo:
+docker exec -i buffalo_mysql mysql -ubuffalo_user -pbuffalo_secret_pass buffalo_pos < migrations/0007_catalog_expansion.sql
+docker exec -i buffalo_mysql mysql -ubuffalo_user -pbuffalo_secret_pass buffalo_pos < migrations/0008_buffalo_sv_menu.sql
 ```
 
 | Migración | Qué hace |
@@ -59,6 +63,8 @@ docker exec -i buffalo_mysql mysql -uroot -proot_password_local buffalo_pos < mi
 | `0001_seed_catalog.sql` | Tablas y datos semilla |
 | `0002_dev_pins.sql` | PINs de **desarrollo** para los empleados (1111 a 5555). Nunca en producción |
 | `0003_audit_immutable.sql` | Triggers que impiden `UPDATE` y `DELETE` en `audit_logs` (RF-07) |
+| `0007_catalog_expansion.sql` | Agrega variedad de productos y la categoría Postres |
+| `0008_buffalo_sv_menu.sql` | Agrega modificadores obligatorios y amplía el menú BW El Salvador |
 
 Si `buffalo_user` intenta aplicar la 0003, MySQL responde `ERROR 1419 ... SUPER privilege and binary logging is enabled`: es normal, hay que usar root.
 

@@ -31,4 +31,6 @@ type TableRepository interface {
 	Merge(ctx context.Context, primary TableRef, others []TableRef) error
 	// Clean deja la mesa libre y libera las mesas que tenía combinadas.
 	Clean(ctx context.Context, ref TableRef) error
+	// Release marca POR_LIMPIAR una mesa ocupada solo si no tiene comanda abierta.
+	Release(ctx context.Context, ref TableRef) error
 }

@@ -29,7 +29,7 @@ func TestPlanMerge(t *testing.T) {
 		wantErr error
 		primary string
 	}{
-		{"consecutivas, desordenadas", []Table{tbl(5, "M-05", "Z", StatusFree), tbl(4, "M-04", "Z", StatusFree)}, nil, "M-04"},
+		{"principal es primera seleccionada", []Table{tbl(5, "M-05", "Z", StatusFree), tbl(4, "M-04", "Z", StatusFree)}, nil, "M-05"},
 		{"una sola", []Table{tbl(4, "M-04", "Z", StatusFree)}, ErrInvalidMerge, ""},
 		{"no libre", []Table{tbl(4, "M-04", "SALON_CENTRAL", StatusFree), occupied}, ErrMergeNotAllowed, ""},
 		{"otra zona", []Table{tbl(3, "M-03", "BARRA", StatusFree), tbl(4, "M-04", "SALON_CENTRAL", StatusFree)}, ErrMergeNotAllowed, ""},
